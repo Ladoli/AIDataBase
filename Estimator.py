@@ -23,15 +23,15 @@ import Basic_Data
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--batch_size', default=100, type=int, help='batch size')
-parser.add_argument('--train_steps', default=1000, type=int,
+parser.add_argument('--batch_size', default=1000, type=int, help='batch size')
+parser.add_argument('--train_steps', default=2000, type=int,
                     help='number of training steps')
 
 def main(argv):
     args = parser.parse_args(argv[1:])
 
     # Fetch the data
-    (train_x, train_y), inputData = Basic_Data.load_data()
+    (train_x, train_y), inputData, (test_x, test_y) = Basic_Data.load_data()
 
     # Feature columns describe how to use the input.
     my_feature_columns = []
@@ -42,7 +42,7 @@ def main(argv):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 10 nodes each.
-        hidden_units=[1000, 1000],
+        hidden_units=[1000],
         # The model must choose between 3 classes.
         n_classes=2)
 
@@ -54,15 +54,16 @@ def main(argv):
 
     print("Finished Model")
 
-    # Evaluate the model.
-    # eval_result = classifier.evaluate(
-    #     input_fn=lambda:iris_data.eval_input_fn(test_x, test_y,
-    #                                             args.batch_size))
-    #
-    # print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
-    #
+    eval_result = classifier.evaluate(
+        input_fn=lambda:Basic_Data.eval_input_fn(test_x, test_y,
+                                                args.batch_size))
+
+    print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+
+
+
     # # Generate predictions from the model
-    expected = [0,1]
+    # expected = [0,1]
     # predict_x = {
     #     'SepalLength': [5.1, 5.9, 6.9],
     #     'SepalWidth': [3.3, 3.0, 3.1],
@@ -70,41 +71,67 @@ def main(argv):
     #     'PetalWidth': [0.5, 1.5, 2.1],
     # }
     #
-
-    childrenNum = []
-    incomeTotal = []
-    creditAmt = []
-    annuityAmt = []
-    amtGoodsPrice = []
-
-    for data in train_x.iterrows():
-        childrenNum.append(data[1]['CNT_CHILDREN'])
-        incomeTotal.append(data[1]['AMT_INCOME_TOTAL'])
-        creditAmt.append(data[1]['AMT_CREDIT'])
-        annuityAmt.append(data[1]['AMT_ANNUITY'])
-        amtGoodsPrice.append(data[1]['AMT_GOODS_PRICE'])
-
-    predict_x = {
-    'CNT_CHILDREN':childrenNum,
-    'AMT_INCOME_TOTAL':incomeTotal,
-    'AMT_CREDIT':creditAmt,
-    'AMT_ANNUITY':annuityAmt,
-    'AMT_GOODS_PRICE':amtGoodsPrice
-    }
-
-    predictions = classifier.predict(
-        input_fn=lambda:Basic_Data.eval_input_fn(predict_x,
-                                                labels=None,
-                                                batch_size=args.batch_size))
     #
-    template = ('\nPrediction is "{}" ({:.1f}%)')
+    # childrenNum = []
+    # incomeTotal = []
+    # creditAmt = []
+    # annuityAmt = []
+    # amtGoodsPrice = []
+    # regionData = []
+    # age = []
+    # daysEmployed = []
+    # daysReg = []
+    # idPub = []
+    # source1 = []
+    # source2 = []
+    # source3 = []
     #
-    for pred_dict in predictions:
-        class_id = pred_dict['class_ids'][0]
-        probability = pred_dict['probabilities'][class_id]
-
-        print(template.format(Basic_Data.SPECIES[class_id],
-                              100 * probability))
+    #
+    #
+    # for data in inputData.iterrows():
+    #     childrenNum.append(data[1]['CNT_CHILDREN'])
+    #     incomeTotal.append(data[1]['AMT_INCOME_TOTAL'])
+    #     creditAmt.append(data[1]['AMT_CREDIT'])
+    #     annuityAmt.append(data[1]['AMT_ANNUITY'])
+    #     amtGoodsPrice.append(data[1]['AMT_GOODS_PRICE'])
+    #     regionData.append(data[1]['REGION_POPULATION_RELATIVE'])
+    #     age.append(data[1]['DAYS_BIRTH'])
+    #     daysEmployed.append(data[1]['DAYS_EMPLOYED'])
+    #     daysReg.append(data[1]['DAYS_REGISTRATION'])
+    #     idPub.append(data[1]['DAYS_ID_PUBLISH'])
+    #     source1.append(data[1]['EXT_SOURCE_1'])
+    #     source2.append(data[1]['EXT_SOURCE_2'])
+    #     source3.append(data[1]['EXT_SOURCE_3'])
+    #
+    # predict_x = {
+    # 'CNT_CHILDREN':childrenNum,
+    # 'AMT_INCOME_TOTAL':incomeTotal,
+    # 'AMT_CREDIT':creditAmt,
+    # 'AMT_ANNUITY':annuityAmt,
+    # 'AMT_GOODS_PRICE':amtGoodsPrice,
+    # 'REGION_POPULATION_RELATIVE':regionData,
+    # 'DAYS_BIRTH':age,
+    # 'DAYS_EMPLOYED':daysEmployed,
+    # 'DAYS_REGISTRATION':daysReg,
+    # 'DAYS_ID_PUBLISH':idPub,
+    # 'EXT_SOURCE_1':source1,
+    # 'EXT_SOURCE_2':source2,
+    # 'EXT_SOURCE_3':source3
+    # }
+    #
+    # predictions = classifier.predict(
+    #     input_fn=lambda:Basic_Data.eval_input_fn(predict_x,
+    #                                             labels=None,
+    #                                             batch_size=args.batch_size))
+    # #
+    # template = ('\nPrediction is "{}" ({:.1f}%)')
+    # #
+    # for pred_dict in predictions:
+    #     class_id = pred_dict['class_ids'][0]
+    #     probability = pred_dict['probabilities'][class_id]
+    #
+    #     print(template.format(Basic_Data.SPECIES[class_id],
+    #                           100 * probability))
 
 
 if __name__ == '__main__':

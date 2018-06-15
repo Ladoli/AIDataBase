@@ -4,23 +4,34 @@ import tensorflow as tf
 TRAIN_FILE = "cutApplication.csv"
 INPUT_FILE = "cutTest.csv"
 
-TEST_COLUMN_NAMES = ['TARGET','CNT_CHILDREN','AMT_INCOME_TOTAL','AMT_CREDIT','AMT_ANNUITY','AMT_GOODS_PRICE']
-INPUT_COLUMN_NAMES = ['CNT_CHILDREN','AMT_INCOME_TOTAL','AMT_CREDIT','AMT_ANNUITY','AMT_GOODS_PRICE']
-
+# TEST_COLUMN_NAMES = ['TARGET','CNT_CHILDREN','AMT_INCOME_TOTAL','AMT_CREDIT','AMT_ANNUITY','AMT_GOODS_PRICE']
+# INPUT_COLUMN_NAMES = ['CNT_CHILDREN','AMT_INCOME_TOTAL','AMT_CREDIT','AMT_ANNUITY','AMT_GOODS_PRICE']
+#
 
 SPECIES = [0, 1]
 
+SKIPROWS = []
 
+ROWS = 2000
+
+for x in range(1, ROWS):
+    SKIPROWS.append(x)
 
 def load_data():
 
 
-    train = pd.read_csv(TRAIN_FILE, names=TEST_COLUMN_NAMES,nrows=500, header=0)
+    train = pd.read_csv(TRAIN_FILE,nrows=ROWS, header=0)
+    train.fillna(0, inplace=True)
     train_x, train_y = train, train.pop('TARGET')
 
-    inputData = pd.read_csv(INPUT_FILE, names=INPUT_COLUMN_NAMES,nrows=500, header=0)
+    test = pd.read_csv(TRAIN_FILE,nrows=ROWS, skiprows=SKIPROWS, header=0)
+    test.fillna(0, inplace=True)
+    test_x, test_y = test, test.pop('TARGET')
 
-    return (train_x, train_y),inputData
+    inputData = pd.read_csv(INPUT_FILE,nrows=30, header=0)
+    inputData.fillna(0, inplace=True)
+
+    return (train_x, train_y),inputData,(test_x, test_y)
     # , (test_x, test_y)
 
 
@@ -62,29 +73,29 @@ def eval_input_fn(features, labels, batch_size):
 # `tf.parse_csv` sets the types of the outputs to match the examples given in
 #     the `record_defaults` argument.
 CSV_TYPES = [[0.0], [0.0], [0.0], [0.0], [0]]
-
-def _parse_line(line):
-    # Decode the line into its fields
-    fields = tf.decode_csv(line, record_defaults=CSV_TYPES)
-
-    # Pack the result into a dictionary
-    features = dict(zip(CSV_COLUMN_NAMES, fields))
-
-    # Separate the label from the features
-    label = features.pop('Species')
-
-    return features, label
-
-
-def csv_input_fn(csv_path, batch_size):
-    # Create a dataset containing the text lines.
-    dataset = tf.data.TextLineDataset(csv_path).skip(1)
-
-    # Parse each line.
-    dataset = dataset.map(_parse_line)
-
-    # Shuffle, repeat, and batch the examples.
-    dataset = dataset.shuffle(1000).repeat().batch(batch_size)
-
-    # Return the dataset.
-    return dataset
+#
+# def _parse_line(line):
+#     # Decode the line into its fields
+#     fields = tf.decode_csv(line, record_defaults=CSV_TYPES)
+#
+#     # Pack the result into a dictionary
+#     features = dict(zip(CSV_COLUMN_NAMES, fields))
+#
+#     # Separate the label from the features
+#     label = features.pop('Species')
+#
+#     return features, label
+#
+#
+# def csv_input_fn(csv_path, batch_size):
+#     # Create a dataset containing the text lines.
+#     dataset = tf.data.TextLineDataset(csv_path).skip(1)
+#
+#     # Parse each line.
+#     dataset = dataset.map(_parse_line)
+#
+#     # Shuffle, repeat, and batch the examples.
+#     dataset = dataset.shuffle(1000).repeat().batch(batch_size)
+#
+#     # Return the dataset.
+#     return dataset

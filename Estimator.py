@@ -24,7 +24,7 @@ import Basic_Data
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--batch_size', default=1000, type=int, help='batch size')
-parser.add_argument('--train_steps', default=2000, type=int,
+parser.add_argument('--train_steps', default=1000, type=int,
                     help='number of training steps')
 
 def main(argv):
@@ -59,6 +59,16 @@ def main(argv):
                                                 args.batch_size))
 
     print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+
+    def serving_input_fn():
+         inputs = {"x": tf.placeholder(shape=[None, 4], dtype=tf.float32)}
+         return tf.estimator.export.ServingInputReceiver(inputs, inputs)
+
+
+    feature_spec = tf.feature_column.make_parse_example_spec(my_feature_columns);
+    export_input_fn = tf.estimator.export.build_parsing_serving_input_receiver_fn(feature_spec);
+    servable_model_path = classifier.export_savedmodel("MODEL", export_input_fn, as_text=True);
+
 
 
 

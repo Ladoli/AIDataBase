@@ -15,22 +15,40 @@ class App extends Component {
   render() {
 
     function queryFunction() {
-      let output = "*";
+      let output = "";
       let tableName = "application_train";
-      let query = "SELECT " + output + " FROM " + tableName;
       let where = "";
       inputQuery("Income", "AMT_INCOME_TOTAL");
       inputQuery("Loan Amount", "AMT_CREDIT");
       inputQuery("Number of Kids", "CNT_CHILDREN");
       inputQuery("Goods Value", "AMT_GOODS_PRICE");
       inputQuery("Annuity", "AMT_ANNUITY");
-      inputQuery("Age", "AGE");
+      inputQuery("Age", "DAYS_BIRTH");
       genderQuery();
       loanSuccessQuery();
+      outputQuery("IncomeOut","AMT_INCOME_TOTAL");
+      outputQuery("Loan AmountOut","AMT_CREDIT");
+      outputQuery("Number of KidsOut","CNT_CHILDREN");
+      outputQuery("Goods ValueOut","AMT_GOODS_PRICE");
+      outputQuery("AnnuityOut","AMT_ANNUITY");
+      outputQuery("IncomeOut","AMT_INCOME_TOTAL");
+      outputQuery("AgeOut","DAYS_BIRTH");
+      outputQuery("GenderOut","CODE_GENDER");
+      outputQuery("LoanOut","TARGET");
 
+
+
+
+
+      if(output === ""){
+        output = "AMT_INCOME_TOTAL,AMT_CREDIT,CNT_CHILDREN,AMT_GOODS_PRICE,AMT_ANNUITY,DAYS_BIRTH,CODE_GENDER,TARGET";
+      }
+
+      let query = "SELECT " + output + " FROM " + tableName;
       if(where !== ""){
         query += " WHERE " + where;
       }
+
 
 
       console.log(query)
@@ -42,11 +60,10 @@ class App extends Component {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         }}).then(function(response) {
-        console.log(response)
       return response.json();
     })
-    .then(function(myJson) {
-      console.log(myJson);
+    .then(function(querRes) {
+      document.getElementById("queryResults").innerHTML = querRes;
     });
 
       function genderQuery(){
@@ -54,15 +71,15 @@ class App extends Component {
         let displayFemale = document.getElementById("femaleFilter");
         if(displayMale.checked){
             if(where !== ""){
-
+              where += " AND CODE_GENDER = 'M' ";
             }else{
-
+              where += "CODE_GENDER = 'M' ";
             }
         }else if(displayFemale.checked){
             if(where !== ""){
-
+              where += " AND CODE_GENDER = 'F' ";
             }else{
-
+              where += "CODE_GENDER = 'F' ";
             }
         }
       }
@@ -74,15 +91,15 @@ class App extends Component {
 
         if(displaySuccessLoan.checked){
             if(where !== ""){
-
+              where += "AND TARGET = 0 ";
             }else{
-
+              where = "TARGET = 0 ";
             }
         }else if(displayProblemLoan.checked){
             if(where !== ""){
-
+              where += "AND TARGET = 1 ";
             }else{
-
+              where = "TARGET = 1 ";
             }
         }
       }
@@ -126,6 +143,17 @@ class App extends Component {
           }
         }
       }
+
+      function outputQuery(idInput, attribute){
+        if(document.getElementById(idInput).checked){
+          if(output === ""){
+            output = attribute;
+          }else{
+            output += ","+attribute;
+          }
+        }
+      }
+
     }
 
     return (
@@ -149,7 +177,7 @@ class App extends Component {
               <input type="radio" name="data-type" id="problemLoan" /> Loans with problems<br/>
               <input type="radio" defaultChecked name="gender-type"/>  All Gender<br/>
               <input type="radio" name="gender-type" id="maleFilter"/>  Male<br/>
-              <input type="radio" name="gender-type"id="femaleFilter"/>  Female<br/>
+              <input type="radio" name="gender-type" id="femaleFilter"/>  Female<br/>
             </div>
           </div>
         </div>
@@ -158,18 +186,18 @@ class App extends Component {
         <div className="row">
           <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
             <div className="col-sm-4 LoanOptionsBox" >
-              <input type="checkbox" /> Income<br/>
-              <input type="checkbox" /> Loan Amount<br/>
-              <input type="checkbox" /> Number of Kids<br/>
+              <input type="checkbox" id="IncomeOut" /> Income<br/>
+              <input type="checkbox" id="Loan AmountOut" /> Loan Amount<br/>
+              <input type="checkbox" id="Number of KidsOut"/> Number of Kids<br/>
             </div>
             <div className="col-sm-4 LoanOptionsBox">
-              <input type="checkbox" /> Goods Value<br/>
-              <input type="checkbox" /> Annuity<br/>
-
+              <input type="checkbox" id="Goods ValueOut" /> Goods Value<br/>
+              <input type="checkbox" id="AnnuityOut" /> Annuity<br/>
+              <input type="checkbox" id="LoanOut" /> Loan Result<br/>
             </div>
             <div className="col-sm-4 LoanOptionsBox">
-              <input type="checkbox" /> Gender<br/>
-              <input type="checkbox" /> Age<br/>
+              <input type="checkbox" id="GenderOut" /> Gender<br/>
+              <input type="checkbox" id="AgeOut" /> Age<br/>
             </div>
           </div>
         </div>

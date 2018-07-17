@@ -16,7 +16,7 @@ class App extends Component {
 
     function queryFunction() {
       let output = "*";
-      let tableName = "application_training"
+      let tableName = "application_train";
       let query = "SELECT " + output + " FROM " + tableName;
       let where = "";
       inputQuery("Income", "AMT_INCOME_TOTAL");
@@ -34,6 +34,20 @@ class App extends Component {
 
 
       console.log(query)
+
+
+        fetch('http://localhost:8000/?query='+query, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }}).then(function(response) {
+        console.log(response)
+      return response.json();
+    })
+    .then(function(myJson) {
+      console.log(myJson);
+    });
 
       function genderQuery(){
         let displayMale = document.getElementById("maleFilter");

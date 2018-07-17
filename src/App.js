@@ -18,22 +18,20 @@ class App extends Component {
       let output = "";
       let tableName = "application_train";
       let where = "";
-      inputQuery("Income", "AMT_INCOME_TOTAL");
+      inputQuery("Income", "INCOME_TOTAL");
       inputQuery("Loan Amount", "AMT_CREDIT");
       inputQuery("Number of Kids", "CNT_CHILDREN");
-      inputQuery("Goods Value", "AMT_GOODS_PRICE");
+      inputQuery("Goods Value", "GOODS_PRICE");
       inputQuery("Annuity", "AMT_ANNUITY");
       inputQuery("Age", "DAYS_BIRTH");
       genderQuery();
       loanSuccessQuery();
-      outputQuery("IncomeOut","AMT_INCOME_TOTAL");
+      outputQuery("IncomeOut","INCOME_TOTAL");
       outputQuery("Loan AmountOut","AMT_CREDIT");
       outputQuery("Number of KidsOut","CNT_CHILDREN");
-      outputQuery("Goods ValueOut","AMT_GOODS_PRICE");
+      outputQuery("Goods ValueOut","GOODS_PRICE");
       outputQuery("AnnuityOut","AMT_ANNUITY");
-      outputQuery("IncomeOut","AMT_INCOME_TOTAL");
       outputQuery("AgeOut","DAYS_BIRTH");
-      outputQuery("GenderOut","CODE_GENDER");
       outputQuery("LoanOut","TARGET");
 
 
@@ -41,7 +39,7 @@ class App extends Component {
 
 
       if(output === ""){
-        output = "AMT_INCOME_TOTAL,AMT_CREDIT,CNT_CHILDREN,AMT_GOODS_PRICE,AMT_ANNUITY,DAYS_BIRTH,CODE_GENDER,TARGET";
+        output = "INCOME_TOTAL,AMT_CREDIT,CNT_CHILDREN,GOODS_PRICE,AMT_ANNUITY,DAYS_BIRTH,CODE_GENDER,TARGET";
       }
 
       let query = "SELECT " + output + " FROM " + tableName;
@@ -49,9 +47,7 @@ class App extends Component {
         query += " WHERE " + where;
       }
 
-
-
-      console.log(query)
+      let outputHeaders = output.split(',');
 
 
         fetch('http://localhost:8000/?query='+query, {
@@ -63,8 +59,45 @@ class App extends Component {
       return response.json();
     })
     .then(function(querRes) {
-      document.getElementById("queryResults").innerHTML = querRes;
+        document.getElementById("queryHeaders").innerHTML ='';
+      for(let i = 0; i< outputHeaders.length; i++){
+        document.getElementById("queryHeaders").innerHTML += '<DIV class="displayResultCells">'+outputHeaders[i]+"</DIV>";
+      }
+      document.getElementById("queryResults").innerHTML ="<BR/>"
+      let results = querRes;
+      for(let i = 0; i<results.length; i++){
+        console.log(results[i])
+        if(results[i].INCOME_TOTAL){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
+        }
+        if(results[i].AMT_CREDIT){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_CREDIT+"</DIV>";
+        }
+        if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
+        }
+        if(results[i].GOODS_PRICE){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
+        }
+        if(results[i].AMT_ANNUITY){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_ANNUITY+"</DIV>";
+        }
+        if(results[i].DAYS_BIRTH){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].DAYS_BIRTH+"</DIV>";
+        }
+        if(results[i].CODE_GENDER === 0 || results[i].CODE_GENDER ){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CODE_GENDER+"</DIV>";
+        }
+        if(results[i].TARGET === 0 || results[i].TARGET){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].TARGET+"</DIV>";
+        }
+        document.getElementById("queryResults").innerHTML +=  "<BR/>";
+      }
+
+      // document.getElementById("queryResults").innerHTML +="<BR/>"+JSON.stringify(querRes);
     });
+    document.getElementById("queryResults").innerHTML += "</TR></THEAD></TABLE>";
+
 
       function genderQuery(){
         let displayMale = document.getElementById("maleFilter");
@@ -91,13 +124,13 @@ class App extends Component {
 
         if(displaySuccessLoan.checked){
             if(where !== ""){
-              where += "AND TARGET = 0 ";
+              where += " AND TARGET = 0 ";
             }else{
               where = "TARGET = 0 ";
             }
         }else if(displayProblemLoan.checked){
             if(where !== ""){
-              where += "AND TARGET = 1 ";
+              where += " AND TARGET = 1 ";
             }else{
               where = "TARGET = 1 ";
             }
@@ -233,7 +266,7 @@ class App extends Component {
         </div>
 
         <br/>
-
+        <div id="queryHeaders"></div>
         <div id="queryResults"></div>
       </div>
     );

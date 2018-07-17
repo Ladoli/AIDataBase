@@ -5,3 +5,20 @@
 .LoanOptionsTrimmer{
   display: inline-block;
 }
+
+
+.displayResultCells{
+  display: inline;
+  float: left;
+  width: 120px;
+  padding-right: 5px;
+  border: solid 1px grey;
+  font-size: 14px;
+}
+
+body{
+  overflow-x: scroll;
+}
+
+#queryHeaders{
+}

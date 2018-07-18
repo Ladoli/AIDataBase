@@ -47,3 +47,31 @@ body{
   border: 2px solid grey;
   border-radius: 4px;
 }
+
+.inputAI{
+  padding-right: 5px;
+  display: block;
+  float: left;
+  width: 100%;
+  text-align: center;
+  border-radius: 7px;
+}
+
+.inputAI input{
+  border-radius: 5px;
+  display: inline-block;
+}
+
+#calculateLoanButton{
+  text-align: "center";
+  display: inline-block;
+  width:250px;
+  border: 2px solid grey;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+#RecommendedLoan{
+  text-align: center;
+  margin-top: 20px;
+}

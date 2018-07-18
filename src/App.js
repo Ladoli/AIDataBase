@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Route} from 'react-router-dom';
 import InputOption from './LoanFiles/InputOption.js';
 import swal from 'sweetalert2';
+let thisF;
 
 
 
@@ -10,9 +11,19 @@ import swal from 'sweetalert2';
 class App extends Component {
 
   componentDidMount() {
+    thisF = this;
+    this.setState({INCOME_TOTAL:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+    this.setState({AMT_CREDIT:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+    this.setState({CNT_CHILDREN:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+    this.setState({GOODS_PRICE:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+    this.setState({AMT_ANNUITY:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+    this.setState({DAYS_BIRTH:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+    this.setState({returnedRowCount:0});
   }
 
   render() {
+
+
 
     function queryFunction() {
       let output = "";
@@ -50,6 +61,8 @@ class App extends Component {
       let outputHeaders = output.split(',');
 
 
+
+
         fetch('http://localhost:8000/?query='+query, {
         method: 'GET',
         headers: {
@@ -65,25 +78,31 @@ class App extends Component {
       }
       document.getElementById("queryResults").innerHTML ="<BR/>"
       let results = querRes;
+      thisF.setState({returnedRowCount:results.length});
       for(let i = 0; i<results.length; i++){
-        console.log(results[i])
         if(results[i].INCOME_TOTAL){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
+          summaryInfoUpdate('INCOME_TOTAL',results[i]);
         }
         if(results[i].AMT_CREDIT){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_CREDIT+"</DIV>";
+          summaryInfoUpdate('AMT_CREDIT',results[i]);
         }
         if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
+          summaryInfoUpdate('CNT_CHILDREN',results[i]);
         }
         if(results[i].GOODS_PRICE){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
+          summaryInfoUpdate('GOODS_PRICE',results[i]);
         }
         if(results[i].AMT_ANNUITY){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_ANNUITY+"</DIV>";
+          summaryInfoUpdate('AMT_ANNUITY',results[i]);
         }
         if(results[i].DAYS_BIRTH){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].DAYS_BIRTH+"</DIV>";
+          summaryInfoUpdate('DAYS_BIRTH',results[i]);
         }
         if(results[i].CODE_GENDER === 0 || results[i].CODE_GENDER ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CODE_GENDER+"</DIV>";
@@ -93,10 +112,8 @@ class App extends Component {
         }
         document.getElementById("queryResults").innerHTML +=  "<BR/>";
       }
-
-      // document.getElementById("queryResults").innerHTML +="<BR/>"+JSON.stringify(querRes);
+      displaySummaryInfo();
     });
-    document.getElementById("queryResults").innerHTML += "</TR></THEAD></TABLE>";
 
 
       function genderQuery(){
@@ -189,8 +206,62 @@ class App extends Component {
 
     }
 
+    function summaryInfoUpdate(keyObject,data){
+      let newMin;
+      let newMax;
+
+      if(thisF.state[keyObject].MIN === "N/A"){
+        newMin = data[keyObject];
+      }else{
+        newMin = thisF.state[keyObject].MIN
+      }
+
+      if(thisF.state[keyObject].MAX === "N/A"){
+        newMax = data[keyObject];
+      }else{
+        newMax = thisF.state[keyObject].MAX
+      }
+      let newTotal = thisF.state[keyObject].TOTAL;
+
+
+      if(data[keyObject] > newMax){
+        newMax = data[keyObject];
+      }
+      if(data[keyObject] < newMin){
+        newMin = data[keyObject];
+      }
+      newTotal += data[keyObject];
+      var updatedKey = {[keyObject]:{MAX:newMax, MIN:newMin, TOTAL: newTotal}};
+      thisF.setState(updatedKey);
+    }
+
+    function displaySummaryInfo(){
+      document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryRow">Result Count: '+thisF.state.returnedRowCount+'</DIV>';
+      document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryRow">Summary Information</DIV>';
+      document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell"> FIELD</DIV>'
+      + '<DIV class="summaryResultCell">MAX:</DIV>'
+      + '<DIV class="summaryResultCell">MIN:</DIV>'
+      + '<DIV class="summaryResultCell">TOTAL:</DIV>'
+      + '<DIV class="summaryResultCell">AVERAGE:</DIV>';
+      displaySummaryRow('INCOME_TOTAL');
+      displaySummaryRow('AMT_CREDIT');
+      displaySummaryRow('CNT_CHILDREN');
+      displaySummaryRow('GOODS_PRICE');
+      displaySummaryRow('AMT_ANNUITY');
+      displaySummaryRow('DAYS_BIRTH');
+
+
+      function displaySummaryRow(key){
+        document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">'+key+'</DIV>'
+        + '<DIV class="summaryResultCell">'+thisF.state[key].MAX+'</DIV>'
+        + '<DIV class="summaryResultCell">'+thisF.state[key].MIN+'</DIV>'
+        + '<DIV class="summaryResultCell">'+thisF.state[key].TOTAL+'</DIV>'
+        + '<DIV class="summaryResultCell">'+thisF.state[key].TOTAL/thisF.state.returnedRowCount+'</DIV>';
+      }
+    }
+
     return (
-      <div className="container">
+      <div className="container" style={{"marginTop":"40px"}}>
         Input Information
         <div className="row">
           <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
@@ -201,7 +272,6 @@ class App extends Component {
               <Route render={()=><InputOption inputAttr={"Goods Value"}/>}/>
               <Route render={()=><InputOption inputAttr={"Annuity"}/>}/>
               <Route render={()=><InputOption inputAttr={"Age"}/>}/>
-              {/* <Route render={()=><InputOption inputAttr={"Annuity"}/>}/> */}
             </div>
 
             <div className="col-sm-3 LoanOptionsBox">
@@ -262,12 +332,13 @@ class App extends Component {
         </div>
         <br/>
         <div style={{textAlign: "center", width: "100%"}}>
-          <div onClick={queryFunction} style={{textAlign: "center", width: "50px", border: "2px solid", display: "inline-block"}} >Test</div>
+          <div onClick={queryFunction} id="queryButton" >Find</div>
         </div>
 
         <br/>
         <div id="queryHeaders"></div>
         <div id="queryResults"></div>
+        <div id="querySummary"></div>
       </div>
     );
   }

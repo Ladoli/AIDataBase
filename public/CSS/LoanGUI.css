@@ -10,15 +10,40 @@
 .displayResultCells{
   display: inline;
   float: left;
-  width: 120px;
+  width: 12.5%;
   padding-right: 5px;
   border: solid 1px grey;
   font-size: 14px;
+  border-radius: 7px;
+  text-align: center;
 }
 
 body{
   overflow-x: scroll;
 }
 
-#queryHeaders{
+.summaryRow{
+  width: 100%;
+  display: block;
+  border-radius: 7px;
+
+}
+
+.summaryResultCell{
+  padding-right: 5px;
+  border: solid 1px grey;
+  display: block;
+  float: left;
+  width: 20%;
+  text-align: center;
+  border-radius: 7px;
+
+}
+
+#queryButton{
+  text-align: "center";
+  display: inline-block;
+  width: 50px;
+  border: 2px solid grey;
+  border-radius: 4px;
 }

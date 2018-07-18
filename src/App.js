@@ -304,8 +304,8 @@ class App extends Component {
             </div>
           </div>
         </div>
-        <br/><br/><br/><br/>
-        Summary Output Information
+        <br/><br/>
+        {/* Summary Output Information
         <div className="row">
           <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
             <div className="col-sm-4 LoanOptionsBox" >
@@ -329,7 +329,7 @@ class App extends Component {
               <input type="checkbox" /> Loans with problems<br/>
             </div>
           </div>
-        </div>
+        </div> */}
         <br/>
         <div style={{textAlign: "center", width: "100%"}}>
           <div onClick={queryFunction} id="queryButton" >Find</div>

@@ -7,6 +7,7 @@ from flask import Flask
 from flask import request
 import json
 from flask_cors import CORS
+import Basic_Data
 
 
 
@@ -106,8 +107,73 @@ def main(argv):
         # print(type(loanAmount))
         # loanAmount = json.loads(loanAmount)
         # print(type(loanAmount))
-
         print(loanAmount)
+
+
+
+        #PREDICTION CODE BELOW
+
+        # (train_x, train_y), inputData, (test_x, test_y) = Basic_Data.load_data()
+        #
+        # my_feature_columns = []
+        # my_feature_columns.append(tf.feature_column.indicator_column(tf.feature_column.categorical_column_with_hash_bucket('NAME_CONTRACT_TYPE',2)))
+        # my_feature_columns.append(tf.feature_column.indicator_column(tf.feature_column.categorical_column_with_hash_bucket('FLAG_OWN_CAR',2)))
+        # my_feature_columns.append(tf.feature_column.indicator_column(tf.feature_column.categorical_column_with_hash_bucket('FLAG_OWN_REALTY',2)))
+        #
+        #
+        # for x in range(2, 21):
+        #     my_feature_columns.append(tf.feature_column.numeric_column(key='FLAG_DOCUMENT_'+str(x)))
+        #
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='EXT_SOURCE_2'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='CNT_CHILDREN'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='CNT_FAM_MEMBERS'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='REGION_RATING_CLIENT'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='REGION_RATING_CLIENT_W_CITY'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='OBS_30_CNT_SOCIAL_CIRCLE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='DEF_30_CNT_SOCIAL_CIRCLE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='OBS_60_CNT_SOCIAL_CIRCLE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='DEF_60_CNT_SOCIAL_CIRCLE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='FLAG_MOBIL'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='FLAG_EMP_PHONE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='FLAG_WORK_PHONE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='FLAG_CONT_MOBILE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='FLAG_PHONE'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='FLAG_EMAIL'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='REG_REGION_NOT_LIVE_REGION'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='REG_REGION_NOT_WORK_REGION'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='LIVE_REGION_NOT_WORK_REGION'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='REG_CITY_NOT_LIVE_CITY'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='REG_CITY_NOT_WORK_CITY'))
+        # my_feature_columns.append(tf.feature_column.numeric_column(key='LIVE_CITY_NOT_WORK_CITY'))
+        #
+        # classifier = tf.estimator.DNNClassifier(
+        #     feature_columns=my_feature_columns,
+        #     hidden_units=[100,100,100,100],
+        #     n_classes=2, model_dir="DNNModelBalanced")
+
+        # predictions = classifier.predict(
+        #     input_fn=lambda:Basic_Data.eval_input_fn(test_x,
+        #                                             labels=None,
+        #                                             batch_size=500))
+        #
+        # template = ('\nPrediction is "{}" ({:.1f}%)')
+        # #
+        # for pred_dict in predictions:
+        #     class_id = pred_dict['class_ids'][0]
+        #     probability = pred_dict['probabilities'][class_id]
+        #
+        #     print(template.format(Basic_Data.SPECIES[class_id],
+        #                           100 * probability))
+
+
+
+
+
+
+
+
+
+        #CODE FOR RETURNING INFO
         return json.dumps({"prediction": loanAmount})
     app.run(debug=True, port=5000)
 

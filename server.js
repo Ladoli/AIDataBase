@@ -2,8 +2,12 @@ const express        = require('express');
 const MongoClient    = require('mongodb').MongoClient;
 const bodyParser     = require('body-parser');
 const db             = require('mysql');
-const cors = require('cors');
+const cors           = require('cors');
 const app            = express();
+
+const redis          = require('redis');
+const REDIS_PORT     = process.env.REDIS_PORT;
+const client         = redis.createClient(REDIS_PORT);
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use( bodyParser.json() );
@@ -30,16 +34,41 @@ app.listen(port, () => {
 });
 
 
-app.get('/', function (req, res) {
-  console.log(req.query.query);
-  //var sql = "SELECT * FROM " + req.query.query + " LIMIT 100";
-  con.query(req.query.query +" LIMIT 5", function (err, result) {
-    if (err) throw err;
-    //console.log("Result: " + JSON.stringify(result[0]));
-    
-    res.json(result);
+app.get('/', cache, getFromDb);
 
+function cache(req, res, next) {
+  const org = req.query.query;
+  var pre_query = new Date().getTime();
+  client.get(org, function (err, data) {
+      if (err) throw err;
+
+      if (data != null) {
+        var post_query = new Date().getTime();
+        console.log("pulled from cache");
+        console.log(((post_query - pre_query) / 1000) + " seconds");
+        var pass = JSON.parse(data);
+        res.json(pass);
+      } else {
+        next();
+      }
   });
+}
 
-  
-})
+function getFromDb(req, res) {
+  console.log(req.query.query);
+  // get sql query 
+  var sql = req.query.query +" LIMIT 50000";
+
+  var pre_query = new Date().getTime();
+  // query database
+  con.query(sql, function (err, result) {
+    if (err) throw err;
+    var post_query = new Date().getTime();
+    console.log(req.query.query);
+    console.log(((post_query - pre_query) / 1000) + " seconds");
+    // the 10 is the duration (in seconds) that the information will stay in the Redis server
+    client.setex(req.query.query, 10, JSON.stringify(result));
+    console.log("pulled from db")
+    res.json(result);
+  });
+}

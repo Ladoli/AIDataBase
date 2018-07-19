@@ -19,6 +19,20 @@ class ClassifierAI extends Component {
         <br/><br/>
         <Route render={()=><AIInputOption id={"Children Count"} />}/>
         <br/>
+        <Route render={()=><AIInputOption id={"Family Size Count"} />}/>
+        <br/>
+        <Route render={()=><AIInputOption id={"Region Rating"} />}/>
+        <br/>
+        <Route render={()=><AIInputOption id={"Region Rating with City"} />}/>
+        <br/>
+        <Route render={()=><AIInputOption id={"External Source 2"} />}/>
+        <br/>
+        <Route render={()=><AIInputOption id={"OBS_30_CNT_SOCIAL_CIRCLE"} />}/>
+        <br/>
+        <Route render={()=><AIInputOption id={"DEF_30_CNT_SOCIAL_CIRCLE"} />}/>
+        <br/>
+        <Route render={()=><AIInputOption id={"External Source 2"} />}/>
+        <br/>
         <Route render={()=><AIInputOption id={"External Source 2"} />}/>
         <br/>
         <Route render={()=><RadioOptionsClassifier label={"Realty ownership"} options={["Owns realty","Does not own realty"]}/>}/>

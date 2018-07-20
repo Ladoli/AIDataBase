@@ -15,9 +15,73 @@ class ClassifierAI extends Component {
     function calculateLoanSuccess() {
       // let incomeParam = document.getElementById("IncomeAI").value;
       // let chidlrenParam = document.getElementById("Children CountAI").value;
-      if(true){
+      let getVars = "kids="+document.getElementById("Children CountAI").value+"&";
+          for(let i = 2; i < 21; i++){
+            if(document.getElementById("Document "+ i +" validsliderCheck").checked){
+              getVars +="doc"+i+"=1&"
+            }else{
+              getVars +="doc"+i+"=0&"
+            }
+          }
+          getVars += "fam="+document.getElementById("Family Size CountAI").value+"&";
+          getVars += "regRatCli="+document.getElementById("Region RatingAI").value+"&";
+          getVars += "regRatCliCity="+document.getElementById("Region Rating with CityAI").value+"&";
+          getVars += "src2="+document.getElementById("External Source 2AI").value+"&";
+          getVars += "obs30soc="+document.getElementById("30 Day Observations Social CircleAI").value+"&";
+          getVars += "def30soc="+document.getElementById("30 Day Defaults Social CircleAI").value+"&";
+          getVars += "obs60soc="+document.getElementById("60 Day Observations Social CircleAI").value+"&";
+          getVars += "def60soc="+document.getElementById("60 Day Defaults Social CircleAI").value+"&";
+          if(document.getElementById("Owns RealtysliderCheck").checked){
+            getVars +="ownRealty=Y&"
+          }
+          if(document.getElementById("Owns CarsliderCheck").checked){
+            getVars +="ownCar=Y&"
+          }
+          if(document.getElementById("Provided Mobile NumbersliderCheck").checked){
+            getVars +="flagMob=1&"
+          }
+          if(document.getElementById("Provided Employee Phone NumbersliderCheck").checked){
+            getVars +="flagEmpMob=1&"
+          }
+          if(document.getElementById("Provided Home Phone NumbersliderCheck").checked){
+            getVars +="flagWorkMob=1&"
+          }
+          if(document.getElementById("Mobile VerifiedsliderCheck").checked){
+            getVars +="flagContMob=1&"
+          }
+          if(document.getElementById("Provided Home Phone 2sliderCheck").checked){
+            getVars +="flagPhone=1&"
+          }
+          if(document.getElementById("Provided EmailsliderCheck").checked){
+            getVars +="flagEmail=1&"
+          }
+          if(document.getElementById("Region: Permanent matches contactsliderCheck").checked){
+            getVars +="flagRegNoLive=0&"
+          }
+          if(document.getElementById("Region: Permanent matches worksliderCheck").checked){
+            getVars +="flagRegNoWork=0&"
+          }
+          if(document.getElementById("Region: Contact matches worksliderCheck").checked){
+            getVars +="flagLiveNoWork=0&"
+          }
+          if(document.getElementById("City: Permanent matches contactsliderCheck").checked){
+            getVars +="flagRegNoLiveCity=0&"
+          }
+          if(document.getElementById("City: Permanent matches worksliderCheck").checked){
+            getVars +="flagCityNoWork=0&"
+          }
+          if(document.getElementById("City: Contact matches worksliderCheck").checked){
+            getVars +="flagLiveNoWorkCity=0&"
+          }
+
+
+
+          getVars += "loanType="+document.querySelector('input[name="Loan contract-type"]:checked').value;
+
+
+
         // ?income='+incomeParam+'&kids='+chidlrenParam
-          fetch('http://localhost:5000/ClassifierAI?dfsdf=er', {
+          fetch('http://localhost:5000/ClassifierAI?' + getVars, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -36,12 +100,9 @@ class ClassifierAI extends Component {
             document.getElementById("classificationResult").innerHTML = "Loan Succeeds";
           }
           //We use a 50% increase as the max this increases the accuracy to 72% from 50%. Increased accuracy is minimal after this point.
-          document.getElementById("probabilityResult").innerHTML = parseFloat(prediction.probability).toFixed(2);
+          // document.getElementById("probabilityResult").innerHTML = parseFloat(prediction.probability).toFixed(2)+"%";
         }
       });
-        }else{
-          swal({title: "Please fill in all fields"});
-        }
     }
 
     return (
@@ -49,25 +110,25 @@ class ClassifierAI extends Component {
         <br/><br/>
         <center>Calculate Loan Eligibility AI</center>
         <br/><br/>
-        <Route render={()=><AIInputOption id={"Children Count"} />}/>
+        <Route render={()=><AIInputOption id={"Children Count"} defaultVal={"0"}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"Family Size Count"} />}/>
+        <Route render={()=><AIInputOption id={"Family Size Count"}  defaultVal={1}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"Region Rating"} />}/>
+        <Route render={()=><AIInputOption id={"Region Rating"} defaultVal={1}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"Region Rating with City"} />}/>
+        <Route render={()=><AIInputOption id={"Region Rating with City"} defaultVal={1}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"External Source 2"} />}/>
+        <Route render={()=><AIInputOption id={"External Source 2"} defaultVal={"0"} step={"decimal"}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"30 Day Observations Social Circle"} />}/>
+        <Route render={()=><AIInputOption id={"30 Day Observations Social Circle"} defaultVal={"0"}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"30 Day Defaults Social Circle"} />}/>
+        <Route render={()=><AIInputOption id={"30 Day Defaults Social Circle"} defaultVal={"0"} />}/>
         <br/>
-        <Route render={()=><AIInputOption id={"60 Day Observations Social Circle"} />}/>
+        <Route render={()=><AIInputOption id={"60 Day Observations Social Circle"} defaultVal={"0"}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"60 Day Defaults Social Circle"} />}/>
+        <Route render={()=><AIInputOption id={"60 Day Defaults Social Circle"} defaultVal={"0"}/>}/>
         <br/>
-        <Route render={()=><RadioOptionsClassifier label={"Loan contract"} options={["Cash loans","Revolving loans"]}/>}/>
+        <Route render={()=><RadioOptionsClassifier label={"Loan contract"} options={["Cash loans","Revolving loans"]} />}/>
         <br/>
         <Route render={()=><SliderOptionClassifier label={"Owns Realty"} />}/>
         <br/>
@@ -79,7 +140,7 @@ class ClassifierAI extends Component {
         <br/>
         <Route render={()=><SliderOptionClassifier label={"Provided Home Phone Number"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Mobile verified"} />}/>
+        <Route render={()=><SliderOptionClassifier label={"Mobile Verified"} />}/>
         <br/>
         <Route render={()=><SliderOptionClassifier label={"Provided Home Phone 2"} />}/>
         <br/>

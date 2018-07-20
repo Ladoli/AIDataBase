@@ -16,9 +16,9 @@ class RadioOptionsClassifier extends Component {
       let displayOptions = options.map(function(option){
         if(count === 0){
           count++;
-          return <div key={thisF.props.label+ option}><input type="radio" id={thisF.props.label+ option +  "option"} defaultChecked name={thisF.props.label+"-type"}/>{option}<br/></div>;
+          return <div key={thisF.props.label+ option}><input type="radio" id={thisF.props.label+ option +  "option"} defaultChecked name={thisF.props.label+"-type"} value={option}/>{option}<br/></div>;
         }else{
-          return <div key={count-1}><input type="radio" id={thisF.props.label+ option +  "option"} name={thisF.props.label+"-type"}/>{option}<br/></div>;
+          return <div key={count-1}><input type="radio" id={thisF.props.label+ option +  "option"} name={thisF.props.label+"-type"} value={option}/>{option}<br/></div>;
         }
       });
 

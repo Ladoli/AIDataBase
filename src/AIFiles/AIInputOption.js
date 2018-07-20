@@ -17,7 +17,7 @@ class AIInputOption extends Component {
 
     return (
       <div className="inputAI">
-        <p style={{display: "inline-block",width: "200px", textAlign: "left"}}>{this.props.id}</p><input id={inputAttr+"AI"} type="number"/>
+        <p style={{display: "inline-block",width: "300px", textAlign: "left"}}>{this.props.id}</p><input id={inputAttr+"AI"} type="number"/>
       </div>
     );
   }

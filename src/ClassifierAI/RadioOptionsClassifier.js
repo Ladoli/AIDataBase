@@ -26,7 +26,7 @@ class RadioOptionsClassifier extends Component {
 
     return (
       <div className="inputAI">
-        <p style={{display: "inline-block",width: "200px", textAlign: "left"}}>{this.props.label}</p>
+        <p style={{display: "inline-block",width: "300px", textAlign: "left"}}>{this.props.label}</p>
         <div style={{display: "inline-block",width: "190px", textAlign: "left"}}>
           {displayOptions}
 

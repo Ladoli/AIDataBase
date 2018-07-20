@@ -14,7 +14,7 @@ class ClassifierAI extends Component {
   render() {
 
     return (
-      <div>
+      <div style={{textAlign: "center"}}>
         <br/><br/>
         <center>Calculate Loan Eligibility AI</center>
         <br/><br/>
@@ -55,6 +55,7 @@ class ClassifierAI extends Component {
         <Route render={()=><SliderOptionClassifier label={"Provided Email"} />}/>
         <br/>
         Document Flags:
+        <br/>
         <br/>
         <Route render={()=><SliderOptionClassifier label={"Document 2 valid"} />}/>
         <br/>
@@ -99,6 +100,7 @@ class ClassifierAI extends Component {
         <Route render={()=><SliderOptionClassifier label={"Document 21 valid"} />}/>
         <br/>
         Address Flags:
+        <br/>
         <br/>
         <Route render={()=><SliderOptionClassifier label={"Region: Permanent matches contact"} />}/>
         <br/>

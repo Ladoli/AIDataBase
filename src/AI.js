@@ -13,21 +13,8 @@ class AI extends Component {
     function calculateLoan() {
       let incomeParam = document.getElementById("IncomeAI").value;
       let chidlrenParam = document.getElementById("Children CountAI").value;
-      let annuityParam = document.getElementById("AnnuityAI").value;
-      let soruceParam = document.getElementById("External Source 2AI").value;
       if(incomeParam){
-
-          let houseOwnership = "N";
-          let loanType= "Revolving loans";
-          if(document.getElementById("ownHouseAIRAdio").checked){
-            houseOwnership = "Y";
-          }
-          if(document.getElementById("cashLoanAIRAdio").checked){
-            houseOwnership = "Cash loans";
-          }
-
-          fetch('http://localhost:5000/?income='+incomeParam+'&kids='+chidlrenParam+'&annuity='+annuityParam+'&src2='+
-          soruceParam+'&houseOwn='+houseOwnership+'&loanType='+loanType, {
+          fetch('http://localhost:5000/LoanRecommenderAI?income='+incomeParam+'&kids='+chidlrenParam, {
           method: 'GET',
           headers: {
             'Accept': 'application/json',
@@ -39,21 +26,14 @@ class AI extends Component {
         if(prediction.prediction < 0){
           document.getElementById("RecommendedLoan").innerHTML = "It is not recommended to approve a loan to this client";
         }else{
-          document.getElementById("RecommendedLoan").innerHTML = "Recommended Loan Amount is " +prediction.prediction;
+          document.getElementById("RecommendedLoan").innerHTML = "Recommended Loan Amount is " +parseFloat(prediction.prediction).toFixed(2)
+          + "<br/>The Maximum Recommended Loan Amount is " +parseFloat(prediction.prediction*1.5).toFixed(2);
+          //We use a 50% increase as the max this increases the accuracy to 72% from 50%. Increased accuracy is minimal after this point.
         }
       });
-
-          // unadjustedPassedInc = float(request.args["income"])
-          // passedAnnuity = float(request.args["annuity"])
-          // passedKids = float(request.args["kids"])
-          // passedSrc = float(request.args["src2"])
-          // passedHouse = request.args["houseOwn"]
-          // passedLoan = request.args["loanType"]
         }else{
           swal({title: "Please fill in all fields"});
         }
-
-
     }
 
     return (
@@ -65,25 +45,6 @@ class AI extends Component {
         <br/>
         <Route render={()=><AIInputOption id={"Children Count"} />}/>
         <br/>
-        <Route render={()=><AIInputOption id={"Annuity"} />}/>
-        <br/>
-        <Route render={()=><AIInputOption id={"External Source 2"} />}/>
-        <br/>
-        <div className="inputAI">
-          <p style={{display: "inline-block",width: "200px", textAlign: "left"}}>Own House</p>
-          <div style={{display: "inline-block",width: "190px", textAlign: "left"}}>
-            <input type="radio" id="ownHouseAIRAdio" defaultChecked name="ownHouse-type"/>Owns House<br/>
-            <input type="radio" name="ownHouse-type"/>Does Not Own House
-          </div>
-        </div>
-        <br/>
-        <div className="inputAI">
-          <p style={{display: "inline-block",width: "200px", textAlign: "left"}}>Type of Loan</p>
-          <div style={{display: "inline-block",width: "190px", textAlign: "left"}}>
-            <input type="radio" id="cashLoanAIRAdio" defaultChecked name="loan-type"/>Cash Loans<br/>
-            <input type="radio" name="loan-type"/>Revolving Loans
-          </div>
-        </div>
         <br/>
         <br/>
         <br/>

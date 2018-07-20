@@ -12,6 +12,37 @@ class ClassifierAI extends Component {
 
 
   render() {
+    function calculateLoanSuccess() {
+      // let incomeParam = document.getElementById("IncomeAI").value;
+      // let chidlrenParam = document.getElementById("Children CountAI").value;
+      if(true){
+        // ?income='+incomeParam+'&kids='+chidlrenParam
+          fetch('http://localhost:5000/ClassifierAI?dfsdf=er', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }}).then(function(response) {
+        return response.json();
+      })
+      .then(function(prediction){
+        if(prediction.error){
+          document.getElementById("classificationResult").innerHTML = prediction.error;
+        }else{
+          console.log(prediction.loanClassification)
+          if(prediction.loanClassification === 1){
+            document.getElementById("classificationResult").innerHTML = "Loan fails";
+          }else{
+            document.getElementById("classificationResult").innerHTML = "Loan Succeeds";
+          }
+          //We use a 50% increase as the max this increases the accuracy to 72% from 50%. Increased accuracy is minimal after this point.
+          document.getElementById("probabilityResult").innerHTML = parseFloat(prediction.probability).toFixed(2);
+        }
+      });
+        }else{
+          swal({title: "Please fill in all fields"});
+        }
+    }
 
     return (
       <div style={{textAlign: "center"}}>
@@ -117,9 +148,11 @@ class ClassifierAI extends Component {
         <br/>
         <br/>
         <div style={{textAlign: "center", width: "100%",marginBottm: "30px"}}>
-          <div id="calculateLoanButton" >Calculate Recommended Loan</div>
+          <div id="calculateLoanButton" onClick={calculateLoanSuccess}>Calculate Loan Success</div>
         </div>
-        <div id="RecommendedLoan"></div>
+        <div id="classificationResult"></div>
+        <div id="probabilityResult"></div>
+
 
       </div>
     );

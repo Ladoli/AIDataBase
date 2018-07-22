@@ -15,7 +15,6 @@ app.use(cors());
 
 
 const port = 8000;
-require('./routes')(app, {});
 
 var con = db.createConnection({
   host: "my3300db.cpqjuav2elw2.us-west-2.rds.amazonaws.com",
@@ -56,8 +55,8 @@ function cache(req, res, next) {
 
 function getFromDb(req, res) {
   console.log(req.query.query);
-  // get sql query 
-  var sql = req.query.query +" LIMIT 50000";
+  // get sql query
+  var sql = req.query.query;
 
   var pre_query = new Date().getTime();
   // query database

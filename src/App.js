@@ -29,6 +29,7 @@ class App extends Component {
       let output = "";
       let tableName = "application_train";
       let where = "";
+      let limit = 100;
       inputQuery("Income", "INCOME_TOTAL");
       inputQuery("Loan Amount", "AMT_CREDIT");
       inputQuery("Number of Kids", "CNT_CHILDREN");
@@ -46,7 +47,9 @@ class App extends Component {
       outputQuery("LoanOut","TARGET");
 
 
-
+      if(document.getElementById("LimitOut").value){
+        limit = document.getElementById("LimitOut").value;
+      }
 
 
       if(output === ""){
@@ -55,13 +58,15 @@ class App extends Component {
 
       let query = "SELECT " + output + " FROM " + tableName;
       if(where !== ""){
-        query += " WHERE " + where;
+        query += " WHERE " + where ;
       }
+      query += " LIMIT " + limit;
 
       let outputHeaders = output.split(',');
 
 
 
+      let queryTimeStart = new Date();
 
         fetch('http://localhost:8000/?query='+query, {
         method: 'GET',
@@ -69,6 +74,8 @@ class App extends Component {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         }}).then(function(response) {
+          let queryTime = (new Date() - queryTimeStart);
+          thisF.setState({queryTime: queryTime});
       return response.json();
     })
     .then(function(querRes) {
@@ -236,6 +243,7 @@ class App extends Component {
     }
 
     function displaySummaryInfo(){
+      document.getElementById("querySummary").innerHTML = '<BR/><DIV class="summaryRow">Query Time: '+ thisF.state.queryTime +'ms</DIV>';
       document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryRow">Result Count: '+thisF.state.returnedRowCount+'</DIV>';
       document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryRow">Summary Information</DIV>';
       document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell"> FIELD</DIV>'
@@ -302,6 +310,10 @@ class App extends Component {
               <input type="checkbox" id="GenderOut" /> Gender<br/>
               <input type="checkbox" id="AgeOut" /> Age<br/>
             </div>
+            <br/>
+            <br/>
+            <br/>
+            <div style={{textAlign: "center"}}>Limit: <input type="number" id="LimitOut" /><br/></div>
           </div>
         </div>
         <br/><br/>

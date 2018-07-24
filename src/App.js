@@ -10,7 +10,8 @@ import swal from 'sweetalert2';
 
 class App extends Component {
 
-  componentDidMount() {
+  componentWillMount(){
+    this.setState({maxPage:"1"});
     this.setState({INCOME_TOTAL:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
     this.setState({AMT_CREDIT:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
     this.setState({CNT_CHILDREN:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
@@ -19,6 +20,11 @@ class App extends Component {
     this.setState({DAYS_BIRTH:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
     this.setState({returnedRowCount:0});
 
+  }
+
+  componentDidMount() {
+
+
 
   }
 
@@ -26,13 +32,54 @@ class App extends Component {
 
     let thisF = this;
 
+    function changePage(){
+      document.getElementById("queryResults").innerHTML ="<BR/>"
+      let results = thisF.state.results;
+      let resLength = thisF.state.returnedRowCount;
+      let maxPage = Math.ceil(resLength);
+      let page = 1;
+      if(document.getElementById("PaginationValue").value){
+        page = document.getElementById("PaginationValue").value
+        if(page > maxPage){
+          page = maxPage;
+        }
+      }
+      for(let i = (page-1)*25; results && results[i] && i<(page*25) && i<resLength; i++){
+        if(results[i].INCOME_TOTAL){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
+        }
+        if(results[i].AMT_CREDIT){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_CREDIT+"</DIV>";
+        }
+        if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
+        }
+        if(results[i].GOODS_PRICE === 0 || results[i].AMT_ANNUITY){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
+        }
+        if(results[i].AMT_ANNUITY === 0 ||results[i].AMT_ANNUITY){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_ANNUITY+"</DIV>";
+        }
+        if(results[i].DAYS_BIRTH === 0 || results[i].DAYS_BIRTH){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+Math.round((results[i].DAYS_BIRTH)/(-365))+"</DIV>";
+        }
+        if(results[i].CODE_GENDER === 0 || results[i].CODE_GENDER ){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CODE_GENDER+"</DIV>";
+        }
+        if(results[i].TARGET === 0 || results[i].TARGET){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].TARGET+"</DIV>";
+        }
+        document.getElementById("queryResults").innerHTML +=  "<BR/>";
+      }
+    }
+
+
 
     function queryFunction() {
       let output = "";
       let summaryOutput = "";
       let tableName = "application_train";
       let where = "";
-      let limit = 100;
       inputQuery("Income", "INCOME_TOTAL");
       inputQuery("Loan Amount", "AMT_CREDIT");
       inputQuery("Number of Kids", "CNT_CHILDREN");
@@ -40,7 +87,7 @@ class App extends Component {
       inputQuery("Annuity", "AMT_ANNUITY");
       inputQuery("Age", "DAYS_BIRTH");
       genderQuery();
-      loanSuccessQuery();      inputQuery("Income", "INCOME_TOTAL");
+      loanSuccessQuery();
 
       outputQuery("IncomeOut","INCOME_TOTAL");
       outputQuery("Loan AmountOut","AMT_CREDIT");
@@ -51,11 +98,6 @@ class App extends Component {
       outputQuery("LoanOut","TARGET");
       outputQuery("GenderOut","CODE_GENDER");
 
-
-
-      if(document.getElementById("LimitOut").value){
-        limit = document.getElementById("LimitOut").value;
-      }
 
       let sorter = "";
 
@@ -79,7 +121,6 @@ class App extends Component {
       if(sorter !== ""){
         query += " ORDER BY " + sorter;
       }
-      query += " LIMIT " + limit;
 
       let outputHeaders = output.split(',');
 
@@ -105,11 +146,17 @@ class App extends Component {
       document.getElementById("queryResults").innerHTML ="<BR/>"
       let results = querRes;
       thisF.setState({returnedRowCount:results.length});
+      thisF.setState({results:querRes});
+      let maxPage = Math.ceil((results.length-1)/25);
+      thisF.setState({maxPage:maxPage.toString()});
       let page = 1;
       if(document.getElementById("PaginationValue").value){
         page = document.getElementById("PaginationValue").value
+        if(page > maxPage){
+          page = maxPage;
+        }
       }
-      for(let i = page*50; i<((page*50)+50) && i<results.length; i++){
+      for(let i = (page-1)*25; results[i] && i<(page*25) && i<results.length; i++){
         if(results[i].INCOME_TOTAL){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
         }
@@ -138,14 +185,13 @@ class App extends Component {
       }
       // displaySummaryInfo();
     });
-    if(summaryOutput = ""){
+    if(summaryOutput === ""){
       summaryOutput = "MIN(INCOME_TOTAL), MAX(INCOME_TOTAL), SUM(INCOME_TOTAL), AVG(INCOME_TOTAL), MIN(AMT_CREDIT), MAX(AMT_CREDIT), SUM(AMT_CREDIT), AVG(AMT_CREDIT), MIN(CNT_CHILDREN), MAX(CNT_CHILDREN), SUM(CNT_CHILDREN), AVG(CNT_CHILDREN), MIN(GOODS_PRICE), MAX(GOODS_PRICE), SUM(GOODS_PRICE), AVG(GOODS_PRICE), MIN(AMT_ANNUITY), MAX(AMT_ANNUITY), SUM(AMT_ANNUITY), AVG(AMT_ANNUITY), MIN(DAYS_BIRTH), MAX(DAYS_BIRTH), SUM(DAYS_BIRTH), AVG(DAYS_BIRTH), MIN(TARGET), MAX(TARGET), SUM(TARGET), AVG(TARGET), MIN(CODE_GENDER), MAX(CODE_GENDER), SUM(CODE_GENDER), AVG(CODE_GENDER)";
     }
     let summaryQuery = "SELECT " + summaryOutput + " FROM " + tableName;
     if(where !== ""){
       summaryQuery += " WHERE " + where ;
     }
-    summaryQuery += " LIMIT " + limit;
 
     let summaryQueryTimeStart = new Date();
 
@@ -204,7 +250,6 @@ class App extends Component {
             }
         }
       }
-SorterDropdown
       function inputQuery(idInput, attribute){
         let box = document.getElementById(idInput+"Check");
 
@@ -264,19 +309,19 @@ SorterDropdown
       console.log(data[0])
       let dataObj = data[0];
       if(dataObj['MAX(INCOME_TOTAL)']){
-        thisF.setState({INCOME_TOTAL:{MAX:dataObj['MAX(INCOME_TOTAL)'], MIN:dataObj['MIN(INCOME_TOTAL)'], TOTAL:dataObj['SUM(INCOME_TOTAL)'], AVG:dataObj['AVG(INCOME_TOTAL)']}});
+        thisF.setState({INCOME_TOTAL:{MAX:dataObj['MAX(INCOME_TOTAL)'], MIN:dataObj['MIN(INCOME_TOTAL)'], TOTAL:dataObj['SUM(INCOME_TOTAL)'].toFixed(2), AVG:dataObj['AVG(INCOME_TOTAL)'].toFixed(2)}});
       }
       if(dataObj['MAX(AMT_CREDIT)']){
-        thisF.setState({AMT_CREDIT:{MAX:dataObj['MAX(AMT_CREDIT)'], MIN:dataObj['MIN(AMT_CREDIT)'], TOTAL:dataObj['SUM(AMT_CREDIT)'], AVG:dataObj['AVG(AMT_CREDIT)']}});
+        thisF.setState({AMT_CREDIT:{MAX:dataObj['MAX(AMT_CREDIT)'], MIN:dataObj['MIN(AMT_CREDIT)'], TOTAL:dataObj['SUM(AMT_CREDIT)'], AVG:dataObj['AVG(AMT_CREDIT)'].toFixed(2)}});
       }
       if(dataObj['MAX(CNT_CHILDREN)']){
-        thisF.setState({CNT_CHILDREN:{MAX:dataObj['MAX(CNT_CHILDREN)'], MIN:dataObj['MIN(CNT_CHILDREN)'], TOTAL:dataObj['SUM(CNT_CHILDREN)'], AVG:dataObj['AVG(CNT_CHILDREN)']}});
+        thisF.setState({CNT_CHILDREN:{MAX:dataObj['MAX(CNT_CHILDREN)'], MIN:dataObj['MIN(CNT_CHILDREN)'], TOTAL:dataObj['SUM(CNT_CHILDREN)'], AVG:dataObj['AVG(CNT_CHILDREN)'].toFixed(2)}});
       }
       if(dataObj['MAX(GOODS_PRICE)']){
-        thisF.setState({GOODS_PRICE:{MAX:dataObj['MAX(GOODS_PRICE)'], MIN:dataObj['MIN(GOODS_PRICE)'], TOTAL:dataObj['SUM(GOODS_PRICE)'], AVG:dataObj['AVG(GOODS_PRICE)']}});
+        thisF.setState({GOODS_PRICE:{MAX:dataObj['MAX(GOODS_PRICE)'], MIN:dataObj['MIN(GOODS_PRICE)'], TOTAL:dataObj['SUM(GOODS_PRICE)'], AVG:dataObj['AVG(GOODS_PRICE)'].toFixed(2)}});
       }
       if(dataObj['MAX(AMT_ANNUITY)']){
-        thisF.setState({AMT_ANNUITY:{MAX:dataObj['MAX(AMT_ANNUITY)'], MIN:dataObj['MIN(AMT_ANNUITY)'], TOTAL:dataObj['SUM(AMT_ANNUITY)'], AVG:dataObj['AVG(AMT_ANNUITY)']}});
+        thisF.setState({AMT_ANNUITY:{MAX:dataObj['MAX(AMT_ANNUITY)'], MIN:dataObj['MIN(AMT_ANNUITY)'], TOTAL:dataObj['SUM(AMT_ANNUITY)'], AVG:dataObj['AVG(AMT_ANNUITY)'].toFixed(2)}});
       }
       if(dataObj['MIN(DAYS_BIRTH)']){
         thisF.setState({DAYS_BIRTH:{MAX: Math.round(dataObj['MIN(DAYS_BIRTH)']/(-365)), MIN: Math.round(dataObj['MAX(DAYS_BIRTH)']/(-365)), TOTAL: 'N/A', AVG: Math.round(dataObj['AVG(DAYS_BIRTH)']/(-365))}});
@@ -388,22 +433,25 @@ SorterDropdown
             </div>
             <div className="col-sm-4 LoanOptionsBox">
               <Route render={()=><SorterDropdown id={"sortBy"} toFieldIDProp={"hiddenSort"}/>}/>
-              <div className="LoanOptionsTrimmer">
-                <div style={{ display: "inline-block"}}>Page </div>
-              </div> <input  style={{marginLeft: "30px"}} id={"PaginationValue"} type="number"/>
-
             </div>
             <br/>
             <br/>
             <br/>
-            <div style={{textAlign: "center"}}>Limit: <input type="number" id="LimitOut" /><br/></div>
           </div>
         </div>
         <br/><br/>
         <div style={{textAlign: "center", width: "100%"}}>
           <div onClick={queryFunction} id="queryButton" >Find</div>
         </div>
-
+        <br/>
+        <br/>
+        <div style={{ display: "inline-block", width: "100%", textAlign: "center"}}>
+          <div className="LoanOptionsTrimmer">
+              Page
+          </div>
+          <input  style={{marginLeft: "30px"}} id={"PaginationValue"} type="number" min="1" max={thisF.state.maxPage} onChange={changePage} defaultValue="1"/>
+        </div>
+        <br/>
         <br/>
         <div id="queryHeaders"></div>
         <div id="queryResults"></div>

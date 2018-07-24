@@ -19,7 +19,7 @@ class SorterDropdown extends Component {
       <div>
           Sort by:<br/>
         <select id={this.props.id} onChange={checkComparator}>
-          <option value = "Unsorted" >Unsorted</option>
+          <option value = "Unsorted" selected >Unsorted</option>
           <option value="INCOME_TOTAL">Income</option>
           <option value="AMT_CREDIT">Loan Amount</option>
           <option value="CNT_CHILDREN">Number of Kids</option>

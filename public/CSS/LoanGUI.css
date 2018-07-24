@@ -62,7 +62,7 @@ body{
   display: inline-block;
 }
 
-#calculateLoanButton{
+#calculateLoanButton, #calculatePrevLoanButton{
   text-align: "center";
   display: inline-block;
   width:250px;
@@ -70,6 +70,7 @@ body{
   border-radius: 4px;
   margin-top: 20px;
 }
+
 
 #RecommendedLoan{
   text-align: center;

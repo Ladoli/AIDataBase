@@ -9,9 +9,19 @@ import swal from 'sweetalert2';
 
 class ClassifierAI extends Component {
 
+  componentWillMount(){
+    if(!this.state || !this.state.classificationResult){
+      this.setState({classificationResult:""});
+    }
+  }
+
 
 
   render() {
+    let thisF = this;
+
+    let classificationResult = thisF.state.classificationResult;
+
     function calculateLoanSuccess() {
       // let incomeParam = document.getElementById("IncomeAI").value;
       // let chidlrenParam = document.getElementById("Children CountAI").value;
@@ -91,16 +101,14 @@ class ClassifierAI extends Component {
       })
       .then(function(prediction){
         if(prediction.error){
-          document.getElementById("classificationResult").innerHTML = prediction.error;
+          thisF.setState({classificationResult: prediction.error});
         }else{
           console.log(prediction.loanClassification)
           if(prediction.loanClassification === 1){
-            document.getElementById("classificationResult").innerHTML = "Loan fails";
+            thisF.setState({classificationResult: "Loan fails"});
           }else{
-            document.getElementById("classificationResult").innerHTML = "Loan Succeeds";
+            thisF.setState({classificationResult: "Loan Succeeds"});
           }
-          //We use a 50% increase as the max this increases the accuracy to 72% from 50%. Increased accuracy is minimal after this point.
-          // document.getElementById("probabilityResult").innerHTML = parseFloat(prediction.probability).toFixed(2)+"%";
         }
       });
     }
@@ -211,7 +219,7 @@ class ClassifierAI extends Component {
         <div style={{textAlign: "center", width: "100%",marginBottm: "30px"}}>
           <div id="calculateLoanButton" onClick={calculateLoanSuccess}>Calculate Loan Success</div>
         </div>
-        <div id="classificationResult"></div>
+        <div id="classificationResult">{classificationResult}</div>
         <div id="probabilityResult"></div>
 
 

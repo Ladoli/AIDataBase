@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {Route} from 'react-router-dom';
-import InputOption from './LoanFiles/InputOption.js';
+import InputOption from './LoanFiles/InputOption';
+import SorterDropdown from './LoanFiles/SorterDropdown';
 import swal from 'sweetalert2';
-let thisF;
 
 
 
@@ -11,22 +11,25 @@ let thisF;
 class App extends Component {
 
   componentDidMount() {
-    thisF = this;
-    this.setState({INCOME_TOTAL:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
-    this.setState({AMT_CREDIT:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
-    this.setState({CNT_CHILDREN:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
-    this.setState({GOODS_PRICE:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
-    this.setState({AMT_ANNUITY:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
-    this.setState({DAYS_BIRTH:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+    this.setState({INCOME_TOTAL:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
+    this.setState({AMT_CREDIT:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
+    this.setState({CNT_CHILDREN:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
+    this.setState({GOODS_PRICE:{MAX:"N/A", MIN:"N/A", TOTAL:0}, AVG: 0});
+    this.setState({AMT_ANNUITY:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
+    this.setState({DAYS_BIRTH:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
     this.setState({returnedRowCount:0});
+
+
   }
 
   render() {
 
+    let thisF = this;
 
 
     function queryFunction() {
       let output = "";
+      let summaryOutput = "";
       let tableName = "application_train";
       let where = "";
       let limit = 100;
@@ -37,7 +40,8 @@ class App extends Component {
       inputQuery("Annuity", "AMT_ANNUITY");
       inputQuery("Age", "DAYS_BIRTH");
       genderQuery();
-      loanSuccessQuery();
+      loanSuccessQuery();      inputQuery("Income", "INCOME_TOTAL");
+
       outputQuery("IncomeOut","INCOME_TOTAL");
       outputQuery("Loan AmountOut","AMT_CREDIT");
       outputQuery("Number of KidsOut","CNT_CHILDREN");
@@ -45,10 +49,21 @@ class App extends Component {
       outputQuery("AnnuityOut","AMT_ANNUITY");
       outputQuery("AgeOut","DAYS_BIRTH");
       outputQuery("LoanOut","TARGET");
+      outputQuery("GenderOut","CODE_GENDER");
+
 
 
       if(document.getElementById("LimitOut").value){
         limit = document.getElementById("LimitOut").value;
+      }
+
+      let sorter = "";
+
+      if(document.getElementById("sortBy").value !== "Unsorted"){
+        sorter = document.getElementById("sortBy").value;
+        if(document.getElementById("sortDesc").checked){
+          sorter += " DESC";
+        }
       }
 
 
@@ -59,6 +74,10 @@ class App extends Component {
       let query = "SELECT " + output + " FROM " + tableName;
       if(where !== ""){
         query += " WHERE " + where ;
+      }
+
+      if(sorter !== ""){
+        query += " ORDER BY " + sorter;
       }
       query += " LIMIT " + limit;
 
@@ -86,30 +105,28 @@ class App extends Component {
       document.getElementById("queryResults").innerHTML ="<BR/>"
       let results = querRes;
       thisF.setState({returnedRowCount:results.length});
-      for(let i = 0; i<results.length; i++){
+      let page = 1;
+      if(document.getElementById("PaginationValue").value){
+        page = document.getElementById("PaginationValue").value
+      }
+      for(let i = page*50; i<((page*50)+50); i++){
         if(results[i].INCOME_TOTAL){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
-          summaryInfoUpdate('INCOME_TOTAL',results[i]);
         }
         if(results[i].AMT_CREDIT){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_CREDIT+"</DIV>";
-          summaryInfoUpdate('AMT_CREDIT',results[i]);
         }
         if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
-          summaryInfoUpdate('CNT_CHILDREN',results[i]);
         }
-        if(results[i].GOODS_PRICE){
+        if(results[i].GOODS_PRICE === 0 || results[i].AMT_ANNUITY){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
-          summaryInfoUpdate('GOODS_PRICE',results[i]);
         }
-        if(results[i].AMT_ANNUITY){
+        if(results[i].AMT_ANNUITY === 0 ||results[i].AMT_ANNUITY){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].AMT_ANNUITY+"</DIV>";
-          summaryInfoUpdate('AMT_ANNUITY',results[i]);
         }
-        if(results[i].DAYS_BIRTH){
-          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].DAYS_BIRTH+"</DIV>";
-          summaryInfoUpdate('DAYS_BIRTH',results[i]);
+        if(results[i].DAYS_BIRTH === 0 || results[i].DAYS_BIRTH){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+Math.round((results[i].DAYS_BIRTH)/(-365))+"</DIV>";
         }
         if(results[i].CODE_GENDER === 0 || results[i].CODE_GENDER ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CODE_GENDER+"</DIV>";
@@ -119,7 +136,32 @@ class App extends Component {
         }
         document.getElementById("queryResults").innerHTML +=  "<BR/>";
       }
-      displaySummaryInfo();
+      // displaySummaryInfo();
+    });
+
+    let summaryQuery = "SELECT " + summaryOutput + " FROM " + tableName;
+    if(where !== ""){
+      summaryQuery += " WHERE " + where ;
+    }
+    summaryQuery += " LIMIT " + limit;
+
+    let summaryQueryTimeStart = new Date();
+
+    fetch('http://localhost:8000/?query='+summaryQuery, {
+    method: 'GET',
+    headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }}).then(function(response) {
+          let queryTime = (new Date() - summaryQueryTimeStart);
+          thisF.setState({summaryQueryTime: queryTime});
+      return response.json();
+    })
+    .then(function(querRes) {
+        console.log(querRes)
+        summaryInfoUpdate(querRes);
+        document.getElementById("querySummary").innerHTML = "";
+        displaySummaryInfo();
     });
 
 
@@ -160,7 +202,7 @@ class App extends Component {
             }
         }
       }
-
+SorterDropdown
       function inputQuery(idInput, attribute){
         let box = document.getElementById(idInput+"Check");
 
@@ -205,41 +247,69 @@ class App extends Component {
         if(document.getElementById(idInput).checked){
           if(output === ""){
             output = attribute;
+            summaryOutput = "MIN("+attribute+"), MAX("+attribute+"), SUM("+attribute+"), AVG("+attribute+")";
           }else{
             output += ","+attribute;
+            summaryOutput += ", MIN("+attribute+"), MAX("+attribute+"), SUM("+attribute+"), AVG("+attribute+")";
+
           }
         }
       }
 
     }
 
-    function summaryInfoUpdate(keyObject,data){
-      let newMin;
-      let newMax;
-
-      if(thisF.state[keyObject].MIN === "N/A"){
-        newMin = data[keyObject];
-      }else{
-        newMin = thisF.state[keyObject].MIN
+    function summaryInfoUpdate(data){
+      console.log(data[0])
+      let dataObj = data[0];
+      if(dataObj['MAX(INCOME_TOTAL)']){
+        thisF.setState({INCOME_TOTAL:{MAX:dataObj['MAX(INCOME_TOTAL)'], MIN:dataObj['MIN(INCOME_TOTAL)'], TOTAL:dataObj['SUM(INCOME_TOTAL)'], AVG:dataObj['AVG(INCOME_TOTAL)']}});
       }
-
-      if(thisF.state[keyObject].MAX === "N/A"){
-        newMax = data[keyObject];
-      }else{
-        newMax = thisF.state[keyObject].MAX
+      if(dataObj['MAX(AMT_CREDIT)']){
+        thisF.setState({AMT_CREDIT:{MAX:dataObj['MAX(AMT_CREDIT)'], MIN:dataObj['MIN(AMT_CREDIT)'], TOTAL:dataObj['SUM(AMT_CREDIT)'], AVG:dataObj['AVG(AMT_CREDIT)']}});
       }
-      let newTotal = thisF.state[keyObject].TOTAL;
-
-
-      if(data[keyObject] > newMax){
-        newMax = data[keyObject];
+      if(dataObj['MAX(CNT_CHILDREN)']){
+        thisF.setState({CNT_CHILDREN:{MAX:dataObj['MAX(CNT_CHILDREN)'], MIN:dataObj['MIN(CNT_CHILDREN)'], TOTAL:dataObj['SUM(CNT_CHILDREN)'], AVG:dataObj['AVG(CNT_CHILDREN)']}});
       }
-      if(data[keyObject] < newMin){
-        newMin = data[keyObject];
+      if(dataObj['MAX(GOODS_PRICE)']){
+        thisF.setState({GOODS_PRICE:{MAX:dataObj['MAX(GOODS_PRICE)'], MIN:dataObj['MIN(GOODS_PRICE)'], TOTAL:dataObj['SUM(GOODS_PRICE)'], AVG:dataObj['AVG(GOODS_PRICE)']}});
       }
-      newTotal += data[keyObject];
-      var updatedKey = {[keyObject]:{MAX:newMax, MIN:newMin, TOTAL: newTotal}};
-      thisF.setState(updatedKey);
+      if(dataObj['MAX(AMT_ANNUITY)']){
+        thisF.setState({AMT_ANNUITY:{MAX:dataObj['MAX(AMT_ANNUITY)'], MIN:dataObj['MIN(AMT_ANNUITY)'], TOTAL:dataObj['SUM(AMT_ANNUITY)'], AVG:dataObj['AVG(AMT_ANNUITY)']}});
+      }
+      if(dataObj['MIN(DAYS_BIRTH)']){
+        thisF.setState({DAYS_BIRTH:{MAX: Math.round(dataObj['MIN(DAYS_BIRTH)']/(-365)), MIN: Math.round(dataObj['MAX(DAYS_BIRTH)']/(-365)), TOTAL: 'N/A', AVG: Math.round(dataObj['AVG(DAYS_BIRTH)']/(-365))}});
+      }
+      // this.setState({AMT_CREDIT:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+      // this.setState({CNT_CHILDREN:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+      // this.setState({GOODS_PRICE:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+      // this.setState({AMT_ANNUITY:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+      // this.setState({DAYS_BIRTH:{MAX:"N/A", MIN:"N/A", TOTAL:0}});
+      // let newMin;
+      // let newMax;
+      //
+      // if(thisF.state[keyObject].MIN === "N/A"){
+      //   newMin = data[keyObject];
+      // }else{
+      //   newMin = thisF.state[keyObject].MIN
+      // }
+      //
+      // if(thisF.state[keyObject].MAX === "N/A"){
+      //   newMax = data[keyObject];
+      // }else{
+      //   newMax = thisF.state[keyObject].MAX
+      // }
+      // let newTotal = thisF.state[keyObject].TOTAL;
+      //
+      //
+      // if(data[keyObject] > newMax){
+      //   newMax = data[keyObject];
+      // }
+      // if(data[keyObject] < newMin){
+      //   newMin = data[keyObject];
+      // }
+      // newTotal += data[keyObject];
+      // var updatedKey = {[keyObject]:{MAX:newMax, MIN:newMin, TOTAL: newTotal}};
+      // thisF.setState(updatedKey);
     }
 
     function displaySummaryInfo(){
@@ -260,11 +330,16 @@ class App extends Component {
 
 
       function displaySummaryRow(key){
-        document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">'+key+'</DIV>'
-        + '<DIV class="summaryResultCell">'+thisF.state[key].MAX+'</DIV>'
+        if(key === 'DAYS_BIRTH'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">AGE</DIV>';
+
+        }else{
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">'+key+'</DIV>';
+        }
+        document.getElementById("querySummary").innerHTML += '<DIV class="summaryResultCell">'+thisF.state[key].MAX+'</DIV>'
         + '<DIV class="summaryResultCell">'+thisF.state[key].MIN+'</DIV>'
         + '<DIV class="summaryResultCell">'+thisF.state[key].TOTAL+'</DIV>'
-        + '<DIV class="summaryResultCell">'+thisF.state[key].TOTAL/thisF.state.returnedRowCount+'</DIV>';
+        + '<DIV class="summaryResultCell">'+thisF.state[key].AVG+'</DIV>';
       }
     }
 
@@ -300,15 +375,21 @@ class App extends Component {
               <input type="checkbox" id="IncomeOut" /> Income<br/>
               <input type="checkbox" id="Loan AmountOut" /> Loan Amount<br/>
               <input type="checkbox" id="Number of KidsOut"/> Number of Kids<br/>
+              <input type="checkbox" id="Goods ValueOut" /> Goods Value<br/>
+
             </div>
             <div className="col-sm-4 LoanOptionsBox">
-              <input type="checkbox" id="Goods ValueOut" /> Goods Value<br/>
               <input type="checkbox" id="AnnuityOut" /> Annuity<br/>
               <input type="checkbox" id="LoanOut" /> Loan Result<br/>
-            </div>
-            <div className="col-sm-4 LoanOptionsBox">
               <input type="checkbox" id="GenderOut" /> Gender<br/>
               <input type="checkbox" id="AgeOut" /> Age<br/>
+            </div>
+            <div className="col-sm-4 LoanOptionsBox">
+              <Route render={()=><SorterDropdown id={"sortBy"} toFieldIDProp={"hiddenSort"}/>}/>
+              <div className="LoanOptionsTrimmer">
+                <div style={{ display: "inline-block"}}>Page </div>
+              </div> <input  style={{marginLeft: "30px"}} id={"PaginationValue"} type="number"/>
+
             </div>
             <br/>
             <br/>
@@ -317,32 +398,6 @@ class App extends Component {
           </div>
         </div>
         <br/><br/>
-        {/* Summary Output Information
-        <div className="row">
-          <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
-            <div className="col-sm-4 LoanOptionsBox" >
-              <input type="checkbox" />Income<br/>
-              <input type="checkbox" />Loan Amount<br/>
-              <input type="checkbox" />Number of Kids<br/>
-              <input type="checkbox" />Goods Value<br/>
-              <input type="checkbox" />Annuity<br/>
-              <input type="checkbox" />Gender<br/>
-              <input type="checkbox" />Age<br/>
-            </div>
-            <div className="col-sm-4 LoanOptionsBox">
-              <input type="checkbox" />Max<br/>
-              <input type="checkbox" />Minimum<br/>
-              <input type="checkbox" />Average<br/>
-              <input type="checkbox" />Total<br/>
-              <input type="checkbox" />Count<br/>
-            </div>
-            <div className="col-sm-4 LoanOptionsBox">
-              <input type="checkbox" /> Sucessful loans<br/>
-              <input type="checkbox" /> Loans with problems<br/>
-            </div>
-          </div>
-        </div> */}
-        <br/>
         <div style={{textAlign: "center", width: "100%"}}>
           <div onClick={queryFunction} id="queryButton" >Find</div>
         </div>

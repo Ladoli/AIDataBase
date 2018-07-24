@@ -30,6 +30,7 @@ class LoanAI extends Component {
         return <p key={i}>{i}</p>
     });
 
+    // let calculatedLoan =
 
     function calculatePreviousLoans(){
       let loanIDParam = document.getElementById("Loan IDAI").value;
@@ -58,7 +59,9 @@ class LoanAI extends Component {
     function calculateLoan() {
       let incomeParam = document.getElementById("IncomeAI").value;
       let chidlrenParam = document.getElementById("Children CountAI").value;
-      if(incomeParam){
+      let interestParam = document.getElementById("Interest RateAI").value;
+      let maxCalcusLoan = incomeParam*.3/(interestParam/100);
+      if(incomeParam && chidlrenParam && interestParam){
           fetch('http://localhost:5000/LoanRecommenderAI?income='+incomeParam+'&kids='+chidlrenParam, {
           method: 'GET',
           headers: {
@@ -68,12 +71,13 @@ class LoanAI extends Component {
         return response.json();
       })
       .then(function(prediction){
-        if(prediction.prediction < 0){
-          thisF.setState({"recommendedLoan":"It is not recommended to approve a loan to this client"});
+        if(prediction.prediction < 0 || maxCalcusLoan <  prediction.prediction ){
+          thisF.setState({"recommendedLoan":"It is not recommended to approve a loan to this client"
+          + "\nThe Maximum Loan Amount is " +parseFloat(maxCalcusLoan).toFixed(2)});
         }else{
           thisF.setState({"recommendedLoan":"Recommended Loan Amount is " +parseFloat(prediction.prediction).toFixed(2)
-          + "\nThe Maximum Recommended Loan Amount is " +parseFloat(prediction.prediction*1.5).toFixed(2)});
-          //We use a 50% increase as the max this increases the accuracy to 72% from 50%. Increased accuracy is minimal after this point.
+          + "\nThe Maximum Loan Amount is " +parseFloat(maxCalcusLoan).toFixed(2)});
+          // We use a 50% increase as the max this increases the accuracy to 72% from 50%. Increased accuracy is minimal after this point.
         }
       });
         }else{
@@ -86,9 +90,11 @@ class LoanAI extends Component {
         <br/><br/>
         <center>Loan Amount AI</center>
         <br/><br/>
-        <Route render={()=><AIInputOption id={"Income"} />}/>
+        <Route render={()=><AIInputOption id={"Income"} defaultVal={"0"}/>}/>
         <br/>
-        <Route render={()=><AIInputOption id={"Children Count"} />}/>
+        <Route render={()=><AIInputOption id={"Children Count"} defaultVal={"0"}/>}/>
+        <br/>
+        <Route render={()=><AIInputOption id={"Interest Rate"} defaultVal={8}/>}/>
         <br/>
         <br/>
         <br/>
@@ -96,7 +102,9 @@ class LoanAI extends Component {
         <div style={{textAlign: "center", width: "100%",marginBottm: "30px"}}>
           <div onClick={calculateLoan} id="calculateLoanButton" >Calculate Recommended Loan</div>
         </div>
-        <div id="RecommendedLoan">{recommendedLoan}</div>
+        <div id="RecommendedLoan">{recommendedLoan}</div><br/>
+        <div id="CalculatedLoan"></div>
+
         <br/>
         <br/>
         <br/>

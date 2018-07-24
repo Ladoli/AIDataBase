@@ -45,6 +45,9 @@ class App extends Component {
         }
       }
       for(let i = (page-1)*25; results && results[i] && i<(page*25) && i<resLength; i++){
+        if(results[i].SK_ID_CURR){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].SK_ID_CURR+"</DIV>";
+        }
         if(results[i].INCOME_TOTAL){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
         }
@@ -110,7 +113,9 @@ class App extends Component {
 
 
       if(output === ""){
-        output = "INCOME_TOTAL,AMT_CREDIT,CNT_CHILDREN,GOODS_PRICE,AMT_ANNUITY,DAYS_BIRTH,CODE_GENDER,TARGET";
+        output = "SK_ID_CURR,INCOME_TOTAL,AMT_CREDIT,CNT_CHILDREN,GOODS_PRICE,AMT_ANNUITY,DAYS_BIRTH,CODE_GENDER,TARGET";
+      }else{
+        output = "SK_ID_CURR," + output;
       }
 
       let query = "SELECT " + output + " FROM " + tableName;
@@ -157,6 +162,9 @@ class App extends Component {
         }
       }
       for(let i = (page-1)*25; results[i] && i<(page*25) && i<results.length; i++){
+        if(results[i].SK_ID_CURR){
+          document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].SK_ID_CURR+"</DIV>";
+        }
         if(results[i].INCOME_TOTAL){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
         }

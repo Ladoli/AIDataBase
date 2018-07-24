@@ -1,0 +1,137 @@
+.LoanOptionsBox{
+  display: inline-block;
+}
+
+.LoanOptionsTrimmer{
+  display: inline-block;
+}
+
+
+.displayResultCells{
+  display: inline;
+  float: left;
+  width: 11.11%;
+  padding-right: 5px;
+  border: solid 1px grey;
+  font-size: 14px;
+  border-radius: 7px;
+  text-align: center;
+}
+
+body{
+  overflow-x: scroll;
+}
+
+.summaryRow{
+  width: 100%;
+  display: block;
+  border-radius: 7px;
+
+}
+
+.summaryResultCell{
+  padding-right: 5px;
+  border: solid 1px grey;
+  display: block;
+  float: left;
+  width: 20%;
+  text-align: center;
+  border-radius: 7px;
+
+}
+
+#queryButton{
+  text-align: "center";
+  display: inline-block;
+  width: 50px;
+  border: 2px solid grey;
+  border-radius: 4px;
+}
+
+.inputAI{
+  padding-right: 5px;
+  display: block;
+  float: left;
+  width: 100%;
+  text-align: center;
+  border-radius: 7px;
+}
+
+.inputAI input{
+  border-radius: 5px;
+  display: inline-block;
+}
+
+#calculateLoanButton, #calculatePrevLoanButton{
+  text-align: "center";
+  display: inline-block;
+  width:250px;
+  border: 2px solid grey;
+  border-radius: 4px;
+  margin-top: 20px;
+}
+
+
+#RecommendedLoan{
+  text-align: center;
+  margin-top: 20px;
+}
+
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 24px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {display:none;}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 5px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(30px);
+  -ms-transform: translateX(30px);
+  transform: translateX(30px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

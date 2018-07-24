@@ -109,7 +109,7 @@ class App extends Component {
       if(document.getElementById("PaginationValue").value){
         page = document.getElementById("PaginationValue").value
       }
-      for(let i = page*50; i<((page*50)+50); i++){
+      for(let i = page*50; i<((page*50)+50) && i<results.length; i++){
         if(results[i].INCOME_TOTAL){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].INCOME_TOTAL+"</DIV>";
         }
@@ -138,7 +138,9 @@ class App extends Component {
       }
       // displaySummaryInfo();
     });
-
+    if(summaryOutput = ""){
+      summaryOutput = "MIN(INCOME_TOTAL), MAX(INCOME_TOTAL), SUM(INCOME_TOTAL), AVG(INCOME_TOTAL), MIN(AMT_CREDIT), MAX(AMT_CREDIT), SUM(AMT_CREDIT), AVG(AMT_CREDIT), MIN(CNT_CHILDREN), MAX(CNT_CHILDREN), SUM(CNT_CHILDREN), AVG(CNT_CHILDREN), MIN(GOODS_PRICE), MAX(GOODS_PRICE), SUM(GOODS_PRICE), AVG(GOODS_PRICE), MIN(AMT_ANNUITY), MAX(AMT_ANNUITY), SUM(AMT_ANNUITY), AVG(AMT_ANNUITY), MIN(DAYS_BIRTH), MAX(DAYS_BIRTH), SUM(DAYS_BIRTH), AVG(DAYS_BIRTH), MIN(TARGET), MAX(TARGET), SUM(TARGET), AVG(TARGET), MIN(CODE_GENDER), MAX(CODE_GENDER), SUM(CODE_GENDER), AVG(CODE_GENDER)";
+    }
     let summaryQuery = "SELECT " + summaryOutput + " FROM " + tableName;
     if(where !== ""){
       summaryQuery += " WHERE " + where ;

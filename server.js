@@ -37,14 +37,11 @@ app.get('/', cache, getFromDb);
 
 function cache(req, res, next) {
   const org = req.query.query;
-  var pre_query = new Date().getTime();
   client.get(org, function (err, data) {
       if (err) throw err;
 
       if (data != null) {
-        var post_query = new Date().getTime();
         console.log("pulled from cache");
-        console.log(((post_query - pre_query) / 1000) + " seconds");
         var pass = JSON.parse(data);
         res.json(pass);
       } else {
@@ -54,19 +51,17 @@ function cache(req, res, next) {
 }
 
 function getFromDb(req, res) {
-  console.log(req.query.query);
   // get sql query
   var sql = req.query.query;
 
-  var pre_query = new Date().getTime();
   // query database
   con.query(sql, function (err, result) {
     if (err) throw err;
-    var post_query = new Date().getTime();
+    
     console.log(req.query.query);
-    console.log(((post_query - pre_query) / 1000) + " seconds");
-    // the 10 is the duration (in seconds) that the information will stay in the Redis server
-    client.setex(req.query.query, 10, JSON.stringify(result));
+    
+    // the 86400 is the duration (in seconds) that the information will stay in the Redis server
+    client.setex(req.query.query, 86400, JSON.stringify(result));
     console.log("pulled from db")
     res.json(result);
   });

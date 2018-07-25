@@ -35,6 +35,11 @@ class LoanAI extends Component {
     function calculatePreviousLoans(){
       let loanIDParam = document.getElementById("Loan IDAI").value;
 
+      if(!loanIDParam){
+        swal({title:"Please enter a Loan ID to check"});
+        return;
+      }
+
       let query = "select SUM(AMT_CREDIT_SUM_DEBT) from bureau b INNER JOIN application_train a ON a.SK_ID_CURR = b.SK_ID_CURR WHERE b.SK_ID_CURR = " + loanIDParam;
 
       let queryTimeStart = new Date();

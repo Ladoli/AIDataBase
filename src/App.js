@@ -146,7 +146,27 @@ class App extends Component {
     .then(function(querRes) {
         document.getElementById("queryHeaders").innerHTML ='';
       for(let i = 0; i< outputHeaders.length; i++){
-        document.getElementById("queryHeaders").innerHTML += '<DIV class="displayResultCells">'+outputHeaders[i]+"</DIV>";
+        let header = outputHeaders[i];
+        if(header === "SK_ID_CURR"){
+          header = "ID";
+        }else if (header === "INCOME_TOTAL") {
+          header = "INCOME";
+        }else if (header === "AMT_CREDIT") {
+          header = "LOAN AMOUNT";
+        }else if (header === "CNT_CHILDREN") {
+          header = "CHILDREN";
+        }else if (header === "GOODS_PRICE") {
+          header = "GOODS PRICE";
+        }else if (header === "AMT_ANNUITY") {
+          header = "ANNUITY";
+        }else if (header === "DAYS_BIRTH") {
+          header = "AGE";
+        }else if (header === "CODE_GENDER") {
+          header = "GENDER";
+        }else if (header === "TARGET") {
+          header = "LOAN RESULT";
+        }
+        document.getElementById("queryHeaders").innerHTML += '<DIV class="displayResultCells">'+header+"</DIV>";
       }
       document.getElementById("queryResults").innerHTML ="<BR/>"
       let results = querRes;
@@ -387,7 +407,16 @@ class App extends Component {
       function displaySummaryRow(key){
         if(key === 'DAYS_BIRTH'){
           document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">AGE</DIV>';
-
+        }else if(key === 'INCOME_TOTAL'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">INCOME</DIV>';
+        }else if(key === 'CNT_CHILDREN'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">CHILDREN</DIV>';
+        }else if(key === 'GOODS_PRICE'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">GOODS PRICE</DIV>';
+        }else if(key === 'AMT_ANNUITY'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">ANNUITY</DIV>';
+        }else if(key === 'AMT_CREDIT'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">LOAN AMOUNT</DIV>';
         }else{
           document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">'+key+'</DIV>';
         }

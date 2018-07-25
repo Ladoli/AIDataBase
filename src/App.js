@@ -400,7 +400,7 @@ class App extends Component {
 
     return (
       <div className="container" style={{"marginTop":"40px"}}>
-        Input Information
+        <h2>Input Information</h2><br/>
         <div className="row">
           <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
             <div className="col-sm-9 LoanOptionsBox" >
@@ -423,7 +423,7 @@ class App extends Component {
           </div>
         </div>
         <br/><br/><br/><br/>
-        Entry Output Information
+        <h2>Entry Output Information</h2><br/>
         <div className="row">
           <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
             <div className="col-sm-4 LoanOptionsBox" >

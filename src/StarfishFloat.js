@@ -9,7 +9,7 @@ class StarfishFloat extends Component {
   render() {
     return(
     // <div id="Starfish">
-      <img src="/Images/Starfish.png" id="starfishImage"/>
+      <img src="/Images/Starfish.png" id="starfishImage" alt=""/>
     // </div>
     )
   }

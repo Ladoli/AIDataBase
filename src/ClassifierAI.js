@@ -157,7 +157,7 @@ class ClassifierAI extends Component {
         <h2>Document Flags</h2>
         <br/>
         <br/>
-        <Route render={()=><SliderOptionClassifier notChecked={true} notChecked={true} label={"Document 2 provided"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 2 provided"} />}/>
         <br/>
         <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 2 provided"} />}/>
         <br/>

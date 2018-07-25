@@ -57,7 +57,7 @@ class App extends Component {
         if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
         }
-        if(results[i].GOODS_PRICE === 0 || results[i].AMT_ANNUITY){
+        if(results[i].GOODS_PRICE === 0 || results[i].GOODS_PRICE){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
         }
         if(results[i].AMT_ANNUITY === 0 ||results[i].AMT_ANNUITY){
@@ -174,7 +174,7 @@ class App extends Component {
         if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
         }
-        if(results[i].GOODS_PRICE === 0 || results[i].AMT_ANNUITY){
+        if(results[i].GOODS_PRICE === 0 || results[i].GOODS_PRICE){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
         }
         if(results[i].AMT_ANNUITY === 0 ||results[i].AMT_ANNUITY){

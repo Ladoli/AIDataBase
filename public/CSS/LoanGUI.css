@@ -204,3 +204,14 @@ input,select{
 select{
   background-color: rgb(245,245,245);
 }
+
+#starfishImage{
+  height: 400px;
+  width: 400px;
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  opacity: .11;
+  background: none;
+  display: block;
+}

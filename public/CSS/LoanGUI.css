@@ -214,4 +214,5 @@ select{
   opacity: .11;
   background: none;
   display: block;
+  pointer-events: none;
 }

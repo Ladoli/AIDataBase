@@ -27,7 +27,7 @@ class ClassifierAI extends Component {
       // let chidlrenParam = document.getElementById("Children CountAI").value;
       let getVars = "kids="+document.getElementById("Children CountAI").value+"&";
           for(let i = 2; i < 21; i++){
-            if(document.getElementById("Document "+ i +" validsliderCheck").checked){
+            if(document.getElementById("Document "+ i +" providedsliderCheck").checked){
               getVars +="doc"+i+"=1&"
             }else{
               getVars +="doc"+i+"=0&"
@@ -116,7 +116,7 @@ class ClassifierAI extends Component {
     return (
       <div style={{textAlign: "center"}}>
         <br/><br/>
-        <center>Calculate Loan Eligibility AI</center>
+        <h1>Calculate Loan Eligibility AI</h1>
         <br/><br/>
         <Route render={()=><AIInputOption id={"Children Count"} defaultVal={"0"}/>}/>
         <br/>
@@ -154,52 +154,52 @@ class ClassifierAI extends Component {
         <br/>
         <Route render={()=><SliderOptionClassifier label={"Provided Email"} />}/>
         <br/>
-        Document Flags:
+        <h2>Document Flags</h2>
         <br/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 2 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 2 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 2 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 2 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 3 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 3 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 4 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 4 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 5 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 5 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 6 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 6 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 7 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 7 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 8 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 8 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 9 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 9 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 10 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 10 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 11 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 11 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 12 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 12 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 13 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 13 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 14 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 14 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 15 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 15 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 16 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 16 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 17 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 17 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 18 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 18 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 19 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 19 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 20 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 20 provided"} />}/>
         <br/>
-        <Route render={()=><SliderOptionClassifier label={"Document 21 valid"} />}/>
+        <Route render={()=><SliderOptionClassifier notChecked={true} label={"Document 21 provided"} />}/>
         <br/>
-        Address Flags:
+        <h2>Address Flags</h2>
         <br/>
         <br/>
         <Route render={()=><SliderOptionClassifier label={"Region: Permanent matches contact"} />}/>

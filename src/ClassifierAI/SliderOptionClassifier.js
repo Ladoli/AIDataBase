@@ -10,6 +10,11 @@ class SliderOptionClassifier extends Component {
 
   render() {
 
+    let defChecked = true;
+
+    if(this.props.notChecked){
+      defChecked = false;
+    }
 
     // <input type="radio" id="ownHouseAIRAdio" defaultChecked name="ownHouse-type"/>Owns House<br/>
 
@@ -20,7 +25,7 @@ class SliderOptionClassifier extends Component {
             {this.props.label}
           </p>
           <div style={{display: "inline-block",width: "60px", textAlign: "left", position: "relative", height: "24px"}}>
-            <input type="checkbox" defaultChecked id={this.props.label + "sliderCheck"}/>
+            <input type="checkbox"  defaultChecked={defChecked} id={this.props.label + "sliderCheck"}/>
             <span className="slider round">
             </span>
           </div>

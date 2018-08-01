@@ -35,6 +35,11 @@ class LoanAI extends Component {
     function calculatePreviousLoans(){
       let loanIDParam = document.getElementById("Loan IDAI").value;
 
+      if(!loanIDParam){
+        swal({title:"Please enter a Loan ID to check"});
+        return;
+      }
+
       let query = "select SUM(AMT_CREDIT_SUM_DEBT) from bureau b INNER JOIN application_train a ON a.SK_ID_CURR = b.SK_ID_CURR WHERE b.SK_ID_CURR = " + loanIDParam;
 
       let queryTimeStart = new Date();
@@ -88,7 +93,7 @@ class LoanAI extends Component {
     return (
       <div>
         <br/><br/>
-        <center>Loan Amount AI</center>
+        <h1>Loan Amount AI</h1>
         <br/><br/>
         <Route render={()=><AIInputOption id={"Income"} defaultVal={"0"}/>}/>
         <br/>
@@ -100,16 +105,13 @@ class LoanAI extends Component {
         <br/>
         <br/>
         <div style={{textAlign: "center", width: "100%",marginBottm: "30px"}}>
-          <div onClick={calculateLoan} id="calculateLoanButton" >Calculate Recommended Loan</div>
+          <div onClick={calculateLoan} id="calculateLoanButton" >Calculate Loan</div>
         </div>
         <div id="RecommendedLoan">{recommendedLoan}</div><br/>
         <div id="CalculatedLoan"></div>
-
         <br/>
         <br/>
-        <br/>
-        <br/>
-        <center>Previous Loans</center>
+        <h1>Previous Loans</h1>
         <br/><br/>
         <Route render={()=><AIInputOption id={"Loan ID"} />}/>
         <div style={{textAlign: "center", width: "100%",marginBottm: "30px"}}>

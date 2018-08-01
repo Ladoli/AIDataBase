@@ -57,7 +57,7 @@ class App extends Component {
         if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
         }
-        if(results[i].GOODS_PRICE === 0 || results[i].AMT_ANNUITY){
+        if(results[i].GOODS_PRICE === 0 || results[i].GOODS_PRICE){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
         }
         if(results[i].AMT_ANNUITY === 0 ||results[i].AMT_ANNUITY){
@@ -146,7 +146,27 @@ class App extends Component {
     .then(function(querRes) {
         document.getElementById("queryHeaders").innerHTML ='';
       for(let i = 0; i< outputHeaders.length; i++){
-        document.getElementById("queryHeaders").innerHTML += '<DIV class="displayResultCells">'+outputHeaders[i]+"</DIV>";
+        let header = outputHeaders[i];
+        if(header === "SK_ID_CURR"){
+          header = "ID";
+        }else if (header === "INCOME_TOTAL") {
+          header = "INCOME";
+        }else if (header === "AMT_CREDIT") {
+          header = "LOAN AMOUNT";
+        }else if (header === "CNT_CHILDREN") {
+          header = "CHILDREN";
+        }else if (header === "GOODS_PRICE") {
+          header = "GOODS PRICE";
+        }else if (header === "AMT_ANNUITY") {
+          header = "ANNUITY";
+        }else if (header === "DAYS_BIRTH") {
+          header = "AGE";
+        }else if (header === "CODE_GENDER") {
+          header = "GENDER";
+        }else if (header === "TARGET") {
+          header = "LOAN RESULT";
+        }
+        document.getElementById("queryHeaders").innerHTML += '<DIV class="displayResultCells">'+header+"</DIV>";
       }
       document.getElementById("queryResults").innerHTML ="<BR/>"
       let results = querRes;
@@ -174,7 +194,7 @@ class App extends Component {
         if(results[i].CNT_CHILDREN === 0 || results[i].CNT_CHILDREN ){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].CNT_CHILDREN+"</DIV>";
         }
-        if(results[i].GOODS_PRICE === 0 || results[i].AMT_ANNUITY){
+        if(results[i].GOODS_PRICE === 0 || results[i].GOODS_PRICE){
           document.getElementById("queryResults").innerHTML +=  '<DIV class="displayResultCells">'+results[i].GOODS_PRICE+"</DIV>";
         }
         if(results[i].AMT_ANNUITY === 0 ||results[i].AMT_ANNUITY){
@@ -387,7 +407,16 @@ class App extends Component {
       function displaySummaryRow(key){
         if(key === 'DAYS_BIRTH'){
           document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">AGE</DIV>';
-
+        }else if(key === 'INCOME_TOTAL'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">INCOME</DIV>';
+        }else if(key === 'CNT_CHILDREN'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">CHILDREN</DIV>';
+        }else if(key === 'GOODS_PRICE'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">GOODS PRICE</DIV>';
+        }else if(key === 'AMT_ANNUITY'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">ANNUITY</DIV>';
+        }else if(key === 'AMT_CREDIT'){
+          document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">LOAN AMOUNT</DIV>';
         }else{
           document.getElementById("querySummary").innerHTML += '<BR/><DIV class="summaryResultCell">'+key+'</DIV>';
         }
@@ -400,7 +429,7 @@ class App extends Component {
 
     return (
       <div className="container" style={{"marginTop":"40px"}}>
-        Input Information
+        <h2>Input Information</h2><br/>
         <div className="row">
           <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
             <div className="col-sm-9 LoanOptionsBox" >
@@ -423,7 +452,7 @@ class App extends Component {
           </div>
         </div>
         <br/><br/><br/><br/>
-        Entry Output Information
+        <h2>Entry Output Information</h2><br/>
         <div className="row">
           <div className="col-xs-12" style={{"width": "100%", "display": "inline-block"}}>
             <div className="col-sm-4 LoanOptionsBox" >

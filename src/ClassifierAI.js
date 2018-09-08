@@ -3,7 +3,7 @@ import {Route} from 'react-router-dom';
 import RadioOptionsClassifier from './ClassifierAI/RadioOptionsClassifier';
 import SliderOptionClassifier from './ClassifierAI/SliderOptionClassifier';
 import AIInputOption from './AIFiles/AIInputOption';
-import swal from 'sweetalert2';
+// import swal from 'sweetalert2';
 
 
 
@@ -23,8 +23,7 @@ class ClassifierAI extends Component {
     let classificationResult = thisF.state.classificationResult;
 
     function calculateLoanSuccess() {
-      // let incomeParam = document.getElementById("IncomeAI").value;
-      // let chidlrenParam = document.getElementById("Children CountAI").value;
+
       let getVars = "kids="+document.getElementById("Children CountAI").value+"&";
           for(let i = 2; i < 21; i++){
             if(document.getElementById("Document "+ i +" providedsliderCheck").checked){

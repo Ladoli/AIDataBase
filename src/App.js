@@ -10,27 +10,29 @@ import swal from 'sweetalert2';
 
 class App extends Component {
 
-  componentWillMount(){
-    this.setState({maxPage:"1"});
-    this.setState({INCOME_TOTAL:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
-    this.setState({AMT_CREDIT:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
-    this.setState({CNT_CHILDREN:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
-    this.setState({GOODS_PRICE:{MAX:"N/A", MIN:"N/A", TOTAL:0}, AVG: 0});
-    this.setState({AMT_ANNUITY:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
-    this.setState({DAYS_BIRTH:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0}});
-    this.setState({returnedRowCount:0});
+  constructor(props){
+    super(props);
 
   }
 
-  componentDidMount() {
-
-
-
+  componentWillMount(){
+    this.setState({
+      maxPage:"1",
+      INCOME_TOTAL:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0},
+      AMT_CREDIT:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0},
+      CNT_CHILDREN:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0},
+      GOODS_PRICE:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0},
+      AMT_ANNUITY:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0},
+      DAYS_BIRTH:{MAX:"N/A", MIN:"N/A", TOTAL:0, AVG: 0},
+      returnedRowCount:0
+    });
   }
 
   render() {
 
     let thisF = this;
+
+
 
     function changePage(){
       document.getElementById("queryResults").innerHTML ="<BR/>"

@@ -1,6 +1,6 @@
 ## Notice
 
-App is currently under maintenance as move our data from AWS. This affects our ability to query the Kaggle data and run the Node Server. In the meantime, Loan Calculation Calculator and Loan Eligibility Classifier still work as these are based off of the the AI/Machine Learning model created from said data.
+App is currently under maintenance as we move our data from AWS. This affects our ability to query the Kaggle data and run the Node Server. In the meantime, Loan Calculation Calculator and Loan Eligibility Classifier still work as these are based off of the the AI/Machine Learning model created from said data.
 
 
 # Classifier App

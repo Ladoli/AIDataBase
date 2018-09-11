@@ -21,6 +21,7 @@ var con = db.createConnection({
   user: "masteruser",
   password: "masterpass",
   database: "csis3300project"
+  // database: "kaggleLoanDB"
 });
 
 con.connect(function(err) {

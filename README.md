@@ -2,6 +2,8 @@
 
 App is currently under maintenance as we move our data from AWS. This affects our ability to query the Kaggle data and run the Node Server. In the meantime, Loan Calculation Calculator and Loan Eligibility Classifier still work as these are based off of the the AI/Machine Learning model created from said data.
 
+To run a local implementation, we have provided an export of the Database in the SQLData folder. If this method is used, MySQL-Server/server.js would also need to be updated with regards to the database connection.
+
 
 # Classifier App
 
